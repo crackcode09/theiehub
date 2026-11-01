@@ -166,10 +166,18 @@
   .hp-where .lbl { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); } .hp-where .lbl.now { color: var(--accent); }
   .hp-where h3 { margin: 6px 0 4px; font-size: 18px; } .hp-where h3::before { content: none; } .hp-where p { color: var(--muted); font-size: 14.5px; margin: 0; }
   .hp-more { margin-top: var(--s3); }
-  .hp-why { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--s7); }
-  .hp-why p { color: var(--muted); font-size: 16px; line-height: 1.7; margin: 0 0 var(--s4); } .hp-why b { color: var(--text); }
-  .hp-why p:first-child { grid-row: span 2; color: var(--text); font-size: 17.5px; }
-  @media (max-width: 900px) { .hp-why { grid-template-columns: 1fr; } .hp-why p:first-child { grid-row: auto; } }
+  /* Why it exists: a two-line headline (each sentence its own balanced line), numbered points, the answer */
+  .hp-why .w-head { font-family: var(--display); font-size: clamp(28px, 3.6vw, 42px); line-height: 1.18; letter-spacing: -.015em; color: var(--text); margin: var(--s2) 0 var(--s6); }
+  .hp-why .w-head span { display: block; width: fit-content; text-wrap: balance; }
+  @media (min-width: 701px) { .hp-why .w-head.fit span { white-space: nowrap; } }
+  .hp-why .acc { color: var(--accent); }
+  .hp-why .w-rows { border-top: 1px solid var(--line); }
+  .hp-why .w-row { display: grid; grid-template-columns: 190px 1fr; gap: var(--s5); padding: var(--s4) 0; border-bottom: 1px solid var(--line); }
+  .hp-why .w-tag { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); padding-top: 4px; }
+  .hp-why .w-row p { margin: 0; color: var(--text); font-size: 17px; line-height: 1.55; } .hp-why .w-row .w-rest { color: var(--muted); }
+  .hp-why .w-ans { margin: var(--s6) 0 0; font-family: var(--display); font-size: clamp(20px, 2.2vw, 24px); line-height: 1.35; color: var(--text); }
+  .hp-why .w-open { margin: var(--s4) 0 0; color: var(--muted); font-size: 15px; line-height: 1.6; } .hp-why .w-open b { color: var(--text); }
+  @media (max-width: 760px) { .hp-why .w-row { grid-template-columns: 1fr; gap: 4px; } .hp-why .w-row p { font-size: 16px; } }
   @media (max-width: 760px) { .hp-two { grid-template-columns: 1fr; } }
   .hp-tag.live { color: var(--green); border-color: var(--green); background: var(--green-soft); } .hp-tag.soon { border-style: dashed; }
   @media (max-width: 900px) { .hp-pillars { grid-template-columns: 1fr 1fr; } }
@@ -258,7 +266,21 @@
   })();
 </script>
 <h2 id="why">Why it exists</h2>
-<div class="hp-why"><p>Industrial engineering makes work safer, faster and less wasteful, and the world needs more of it: it is projected to be among the fastest-growing engineering occupations through 2034. Yet the way people learn it has not kept up. Good material is scattered: much of it sits behind paywalls, in journals or in software sales pitches, and what is free is usually one course or one topic, often frozen years ago. Methods only turn into skill through practice on real problems, and there are few places to get that practice. And plants are losing the people who know how the work really runs, often before anyone has written it down.</p><p>The IE Hub is an open answer: the whole field mapped, the methods taught for free, practised on data anyone can rerun, each course checked in public by a named reviewer before it is marked verified, and improved by the people who use it.</p><p><b>Why open source.</b> Knowledge that improves how work gets done should be free to read, check and build on. Every course, dataset and line of code here can be inspected, corrected, reused and extended, even commercially (content CC BY 4.0, code MIT; see the <a href="https://github.com/crackcode09/theiehub/blob/main/LICENSE" rel="noopener">licence</a>). Being open is also how it stays honest: mistakes are visible, and anyone can fix them.</p></div>
+<div class="hp-why"><p class="w-head"><span>Industrial engineering is growing.</span><span class="acc">The way people learn it has not kept up.</span></p><div class="w-rows"><div class="w-row"><span class="w-tag">01 · scattered</span><p>Good material sits behind paywalls, in journals or in sales pitches. <span class="w-rest">What is free is usually one course or one topic, often frozen years ago.</span></p></div><div class="w-row"><span class="w-tag">02 · no practice</span><p>Methods only turn into skill through practice on real problems. <span class="w-rest">There are few places to get that practice.</span></p></div><div class="w-row"><span class="w-tag">03 · retiring</span><p>Plants are losing the people who know how the work really runs. <span class="w-rest">Often before anyone has written it down.</span></p></div></div><p class="w-ans">The IE Hub is an open answer: <span class="acc">the whole field mapped, taught for free, practised on data anyone can rerun, checked in public, improved by the people who use it.</span></p><p class="w-open"><b>Why open source.</b> Knowledge that improves how work gets done should be free to read, check and build on. Every course, dataset and line of code here can be inspected, corrected and reused, even commercially (content CC BY 4.0, code MIT; see the <a href="https://github.com/crackcode09/theiehub/blob/main/LICENSE" rel="noopener">licence</a>). Being open is how it stays honest: mistakes are visible, and anyone can fix them.</p><script>
+  (function () {
+    const h = document.querySelector('.hp-why .w-head'); if (!h) return;
+    const fit = () => {
+      h.classList.remove('fit'); h.style.fontSize = '';
+      if (innerWidth <= 700) return;
+      h.classList.add('fit');
+      const base = parseFloat(getComputedStyle(h).fontSize);
+      const widest = Math.max(...[...h.children].map(s => s.getBoundingClientRect().width));
+      if (widest) h.style.fontSize = Math.min(base * h.clientWidth / widest, 76) + 'px';
+    };
+    fit(); if (document.fonts) document.fonts.ready.then(fit);
+    let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(fit, 80); });
+  })();
+</script></div>
 
 <h2 id="pillars">What's here</h2>
 <div class="hp-pillars"><div class="hp-card"><span class="hp-tag live">live</span><h3>Learn</h3><p>Open courses with datasets you can rerun, a learning path by role and a mind map of the field.</p><a class="hp-go" href="learn.html">Browse the catalog →</a></div><div class="hp-card"><span class="hp-tag soon">coming</span><h3>Projects</h3><p>Worked cases from the courses, followed from problem to result, with simulated data you can rerun.</p><a class="hp-go" href="roadmap.html#phase-4">On the roadmap →</a></div><div class="hp-card"><span class="hp-tag soon">coming</span><h3>Insights</h3><p>Plain-language notes: how a problem was solved, a research paper explained, a tool reviewed.</p><a class="hp-go" href="roadmap.html#phase-5">On the roadmap →</a></div><div class="hp-card"><span class="hp-tag soon">coming</span><h3>Collaborate</h3><p>Review a course, propose one of the open topics, or start a project together.</p><a class="hp-go" href="roadmap.html#phase-4">On the roadmap →</a></div></div>

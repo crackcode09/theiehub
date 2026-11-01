@@ -166,10 +166,18 @@ __HEAD_SCRIPT__
   .hp-where .lbl { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); } .hp-where .lbl.now { color: var(--accent); }
   .hp-where h3 { margin: 6px 0 4px; font-size: 18px; } .hp-where h3::before { content: none; } .hp-where p { color: var(--muted); font-size: 14.5px; margin: 0; }
   .hp-more { margin-top: var(--s3); }
-  .hp-why { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--s7); }
-  .hp-why p { color: var(--muted); font-size: 16px; line-height: 1.7; margin: 0 0 var(--s4); } .hp-why b { color: var(--text); }
-  .hp-why p:first-child { grid-row: span 2; color: var(--text); font-size: 17.5px; }
-  @media (max-width: 900px) { .hp-why { grid-template-columns: 1fr; } .hp-why p:first-child { grid-row: auto; } }
+  /* Why it exists: a two-line headline (each sentence its own balanced line), numbered points, the answer */
+  .hp-why .w-head { font-family: var(--display); font-size: clamp(28px, 3.6vw, 42px); line-height: 1.18; letter-spacing: -.015em; color: var(--text); margin: var(--s2) 0 var(--s6); }
+  .hp-why .w-head span { display: block; width: fit-content; text-wrap: balance; }
+  @media (min-width: 701px) { .hp-why .w-head.fit span { white-space: nowrap; } }
+  .hp-why .acc { color: var(--accent); }
+  .hp-why .w-rows { border-top: 1px solid var(--line); }
+  .hp-why .w-row { display: grid; grid-template-columns: 190px 1fr; gap: var(--s5); padding: var(--s4) 0; border-bottom: 1px solid var(--line); }
+  .hp-why .w-tag { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); padding-top: 4px; }
+  .hp-why .w-row p { margin: 0; color: var(--text); font-size: 17px; line-height: 1.55; } .hp-why .w-row .w-rest { color: var(--muted); }
+  .hp-why .w-ans { margin: var(--s6) 0 0; font-family: var(--display); font-size: clamp(20px, 2.2vw, 24px); line-height: 1.35; color: var(--text); }
+  .hp-why .w-open { margin: var(--s4) 0 0; color: var(--muted); font-size: 15px; line-height: 1.6; } .hp-why .w-open b { color: var(--text); }
+  @media (max-width: 760px) { .hp-why .w-row { grid-template-columns: 1fr; gap: 4px; } .hp-why .w-row p { font-size: 16px; } }
   @media (max-width: 760px) { .hp-two { grid-template-columns: 1fr; } }
   .hp-tag.live { color: var(--green); border-color: var(--green); background: var(--green-soft); } .hp-tag.soon { border-style: dashed; }
   @media (max-width: 900px) { .hp-pillars { grid-template-columns: 1fr 1fr; } }
