@@ -123,6 +123,25 @@ def roadmap_parts():
             "RM_BAR": bar, "RM_FILTER": filt, "RM_TIMELINE": "".join(lis), "RM_UPDATES": upd}
 
 
+# Fits the "Why it exists" headline to the content width: its longer line runs edge to edge, both lines keep
+# one size. Measured with the page's own font after it loads and again on resize; phones keep the wrapped headline.
+WHY_FIT = """<script>
+  (function () {
+    const h = document.querySelector('.hp-why .w-head'); if (!h) return;
+    const fit = () => {
+      h.classList.remove('fit'); h.style.fontSize = '';
+      if (innerWidth <= 700) return;
+      h.classList.add('fit');
+      const base = parseFloat(getComputedStyle(h).fontSize);
+      const widest = Math.max(...[...h.children].map(s => s.getBoundingClientRect().width));
+      if (widest) h.style.fontSize = Math.min(base * h.clientWidth / widest, 76) + 'px';
+    };
+    fit(); if (document.fonts) document.fonts.ready.then(fit);
+    let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(fit, 80); });
+  })();
+</script>"""
+
+
 # The home page hero: the old catalog front door's title, map lines and animation, with what the hub is and two ways in.
 HUB_HERO = """<section class="hero" id="hero">
   <svg class="bgmap" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -187,7 +206,7 @@ def hub_page(model):
     w = hub["why"]
     why = (f'<p class="w-head"><span>{w["headline"][0]}</span><span class="acc">{w["headline"][1]}</span></p><div class="w-rows">'
            + "".join(f'<div class="w-row"><span class="w-tag">{p["tag"]}</span><p>{p["lead"]} <span class="w-rest">{p["rest"]}</span></p></div>' for p in w["points"])
-           + f'</div><p class="w-ans">{w["answer"][0]} <span class="acc">{w["answer"][1]}</span></p><p class="w-open">{w["open"]}</p>')
+           + f'</div><p class="w-ans">{w["answer"][0]} <span class="acc">{w["answer"][1]}</span></p><p class="w-open">{w["open"]}</p>' + WHY_FIT)
     return HUB_HERO.replace("__ABOUT__", hub["about"]) + f"""
 <h2 id="why">Why it exists</h2>
 <div class="hp-why">{why}</div>
