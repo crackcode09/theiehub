@@ -11,6 +11,14 @@
 
 **32 courses built**, covering 33 of the 102 catalog topics. All are `draft` until a reviewer verifies them (see [Status, review and legal](#status-review-and-legal)). Read them on the site: <https://theiehub.com/>.
 
+## Why The IE Hub exists
+
+Industrial engineering makes work safer, faster and less wasteful, and the world needs more of it: it is projected to be among the fastest-growing engineering occupations through 2034 ([BLS](https://www.bls.gov/ooh/architecture-and-engineering/industrial-engineers.htm)). Yet the way people learn it has not kept up. Good material is scattered: much of it sits behind paywalls, in journals or in software sales pitches, and what is free is usually one course or one topic, often frozen years ago. As IISE's own magazine puts it, there is no substitute for hands-on experience ([ISE Magazine](https://www.iise.org/isemagazine/details.aspx?id=54104)), and there are few places to get it. And plants are losing the people who know how the work really runs, often before anyone has written it down.
+
+The IE Hub is an open answer: the whole field mapped, the methods taught for free, practised on data anyone can rerun, each course checked in public by a named reviewer before it is marked verified, and improved by the people who use it.
+
+**Why open source.** Knowledge that improves how work gets done should be free to read, check and build on. Every course, dataset and line of code here can be inspected, corrected, reused and extended, even commercially (content CC BY 4.0, code MIT; see [LICENSE](LICENSE)). Being open is also how it stays honest: mistakes are visible, and anyone can fix them.
+
 ## Courses
 
 New to industrial engineering? Start with [Introduction to Industrial Engineering](courses/technical-skills/introduction-to-industrial-engineering/README.md), the broad entry point, then pick a category.
@@ -19,7 +27,7 @@ See [ROADMAP.md](ROADMAP.md) for a checklist of what is built and what is still 
 
 [![Roadmap graph](public/roadmap.svg)](public/roadmap.svg)
 
-**Interactive site:** <https://theiehub.com/> is the hub's home page: search, where to start, the live numbers and what is here. The courses are on <https://theiehub.com/learn>:
+**Interactive site:** <https://theiehub.com/> is the hub's home page: why it exists, what is here, who it is for and where it is going. The courses are on <https://theiehub.com/learn>:
 
 - **Catalog:** every course by category, with search.
 - **Learning path:**
