@@ -307,6 +307,10 @@ __FOOTER__
     const curMod = modules.find(m => m.rel === file);
     $('pathFile').textContent = curMod ? String(modules.indexOf(curMod)).padStart(2, '0') : file.split('/').pop(); $('eyebrowFile').textContent = file;
     document.title = `${curMod ? curMod.label + ' · ' : ''}${course.label} · The IE Hub`;
+    // One canonical URL per course file (the page itself is shared by every course, so it has none in its HTML).
+    let canon = document.querySelector('link[rel="canonical"]');
+    if (!canon) { canon = document.createElement('link'); canon.rel = 'canonical'; document.head.append(canon); }
+    canon.href = `https://theiehub.com/course?c=${slugQ}${isReadme ? '' : '&f=' + encodeURIComponent(file)}`;
     $('btnGithub').href = `${REPO}/blob/main/${courseRoot}/${file}`;
   }
   setFile(file);
