@@ -1,5 +1,5 @@
 {
-  "_about": "The IE Hub's pillars and the site roadmap. The footer and public/roadmap.html are built from this file and so is the home page (public/index.html). Pillar status: live, soon or planned; only live pillars become links. Phase status: done, next, along (in progress alongside the others), planned or later. Updates list only what visitors notice: no hosting or repository details. __COURSES__, __MODULES__, __VERIFIED__, __COVERED__, __TOTAL__ and __OPEN__ are filled in from the courses at build time. start: course slugs shown as start-here links on the home page.",
+  "_about": "The IE Hub's pillars and the site roadmap. The footer and public/roadmap.html are built from this file and so is the home page (public/index.html). Pillar status: live, soon or planned; only live pillars become links. Phase status: done, next, along (in progress alongside the others), planned or later. Updates list only what visitors notice: no hosting or repository details. __COURSES__, __MODULES__, __VERIFIED__, __COVERED__, __TOTAL__ and __OPEN__ are filled in from the courses at build time. start: course slugs shown as start-here links on the home page. about: the home page's paragraph. audiences: the home page's 'Find your way in' cards (an audience tied to a pillar that is not live yet links to the roadmap). A phase's short: its line in the home page's 'Where it is going' (now = phases in progress, next = the next phase). why: the home page's 'Why it exists' section: a two-line headline (each sentence on its own line), three points (a lead sentence and a quieter second one), the answer and the open-source line. README.md and VISION.md carry the same argument as prose; keep them in step.",
   "pillars": [
     {
       "key": "learn",
@@ -65,7 +65,8 @@
       "items": [
         "Review board built",
         "__VERIFIED__ of __COURSES__ courses verified; first goal: 2 to 3, with reviewer credits"
-      ]
+      ],
+      "short": "Getting the first courses reviewed and verified by named reviewers, with credit."
     },
     {
       "title": "Projects and Collaborate",
@@ -75,7 +76,8 @@
       ],
       "status": "next",
       "body": "Worked projects from the course case companies, problem to result. A Collaborate page: review a course, propose one of the __OPEN__ open topics, start a project, through GitHub Discussions.",
-      "items": []
+      "items": [],
+      "short": "Worked projects from the course cases, and a page of open requests you can pick up."
     },
     {
       "title": "Insights",
@@ -131,11 +133,60 @@
       "text": "The IE Hub name and logo adopted."
     }
   ],
-  "start": [
-    "human-centered-ai",
-    "efficient-ai",
-    "process-mapping",
-    "measurement-and-basic-statistics",
-    "voice-of-the-customer"
-  ]
+  "about": "The know-how that makes work better should not sit behind paywalls, in sales decks, or in the heads of people about to retire.",
+  "audiences": [
+    {
+      "title": "Students",
+      "text": "Work through open courses at your own pace, starting from the fundamentals, and rerun every worked example with the same data.",
+      "href": "learn.html",
+      "cta": "Start learning"
+    },
+    {
+      "title": "Working engineers",
+      "text": "Pick your role, such as quality or industrial engineer, and follow a learning path built on that occupation's official profile.",
+      "href": "learn.html#tab=path",
+      "cta": "Learning paths"
+    },
+    {
+      "title": "Reviewers and authors",
+      "text": "Check a course against the public review checklist and be credited as its reviewer, or write one of the __OPEN__ topics that have no course yet.",
+      "href": "https://github.com/crackcode09/theiehub/blob/main/REVIEW.md",
+      "cta": "How review works"
+    },
+    {
+      "title": "Teams and partners",
+      "text": "Bring a problem, a dataset or a project idea to build in the open.",
+      "href": "roadmap.html#phase-4",
+      "cta": "Coming with Collaborate",
+      "pillar": "collaborate"
+    }
+  ],
+  "why": {
+    "headline": [
+      "Industrial engineering is growing.",
+      "The way people learn it has not kept up."
+    ],
+    "points": [
+      {
+        "tag": "01 · scattered",
+        "lead": "Good material sits behind paywalls, in journals or in sales pitches.",
+        "rest": "What is free is usually one course or one topic, often frozen years ago."
+      },
+      {
+        "tag": "02 · no practice",
+        "lead": "Methods only turn into skill through practice on real problems.",
+        "rest": "There are few places to get that practice."
+      },
+      {
+        "tag": "03 · retiring",
+        "lead": "Plants are losing the people who know how the work really runs.",
+        "rest": "Often before anyone has written it down."
+      }
+    ],
+    "answer": [
+      "The IE Hub is an open answer:",
+      "the whole field mapped, taught for free, practised on data anyone can rerun, checked in public, improved by the people who use it."
+    ],
+    "open": "<b>Why open source.</b> Knowledge that improves how work gets done should be free to read, check and build on. Every course, dataset and line of code here can be inspected, corrected and reused, even commercially (content CC BY 4.0, code MIT; see the <a href=\"https://github.com/crackcode09/theiehub/blob/main/LICENSE\" rel=\"noopener\">licence</a>). Being open is how it stays honest: mistakes are visible, and anyone can fix them."
+  }
 }

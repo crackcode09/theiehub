@@ -2,6 +2,14 @@
 
 Recorded 2026-10-27. The public version of this page is the site's [roadmap](https://theiehub.com/roadmap.html).
 
+## Why The IE Hub exists
+
+Industrial engineering makes work safer, faster and less wasteful, and the world needs more of it: it is projected to be among the fastest-growing engineering occupations through 2034 ([BLS](https://www.bls.gov/ooh/architecture-and-engineering/industrial-engineers.htm)). Yet the way people learn it has not kept up. Good material is scattered: much of it sits behind paywalls, in journals or in software sales pitches, and what is free is usually one course or one topic, often frozen years ago. Methods only turn into skill through practice on real problems, and there are few places to get that practice. And plants are losing the people who know how the work really runs, often before anyone has written it down.
+
+The IE Hub is an open answer: the whole field mapped, the methods taught for free, practised on data anyone can rerun, each course checked in public by a named reviewer before it is marked verified, and improved by the people who use it.
+
+**Why open source.** Knowledge that improves how work gets done should be free to read, check and build on. Every course, dataset and line of code here can be inspected, corrected, reused and extended, even commercially (content CC BY 4.0, code MIT; see [LICENSE](LICENSE)). Being open is also how it stays honest: mistakes are visible, and anyone can fix them.
+
 ## The end goal
 
 A person comes to the site and names a position close to industrial engineering that they want to work in, for example *continuous improvement engineer*. The site answers, for that position and for the way the market defines it today:

@@ -1,15 +1,44 @@
-This repository is dual-licensed.
+This repository is dual-licensed: code under the MIT License, everything else under
+the Creative Commons Attribution 4.0 International License (CC BY 4.0). The exceptions
+in section 3 are covered by neither.
 
-1. Course content — everything in modules/, reference/, solutions/, data/, figures/
-   and README.md — is licensed under the Creative Commons Attribution 4.0
-   International License (CC BY 4.0).
-   Full text: https://creativecommons.org/licenses/by/4.0/legalcode
+1. Code: MIT License (full text below). This covers
+   - tools/ at the repository root (the site generator, the build script and the
+     page templates);
+   - the tools/ folder inside every course (the scripts that generate data, check
+     results and draw figures);
+   - the dashboard/ folder inside a course (an HTML and JavaScript dashboard);
+   - the code in the site pages built into public/.
 
-2. Source code in tools/ is licensed under the MIT License:
+2. Content: CC BY 4.0. Full text: https://creativecommons.org/licenses/by/4.0/legalcode
+   This covers everything not listed in section 1 or 3, including
+   - every course's README.md and its modules/, reference/, solutions/, data/,
+     figures/, templates/ and examples/ folders (text, datasets, spreadsheets and
+     images);
+   - the text of the site pages in public/ and the figures built from the courses;
+   - the repository's documentation: README.md, ROADMAP.md, VISION.md,
+     CONTRIBUTING.md, REVIEW.md, NOTICE.md, the legal pages in tools/legal/ and
+     the reviews/ folder.
+   You may share and adapt it for any purpose, including commercially, if you give
+   appropriate credit to "The IE Hub (theiehub.com)", link to the licence and say
+   what you changed.
+
+3. Not covered by either licence
+   - The IE Hub name and logo: the >ie mark and the "the IE hub" wordmark, wherever
+     they appear (for example public/favicon.svg, public/favicon-16.png,
+     public/favicon-32.png, public/apple-touch-icon.png, public/og.png,
+     tools/logo/ and .github/assets/). All rights reserved. You may use the name
+     to refer to this project, but not as the name or logo of your own work.
+   - Third-party files keep their own licences: Bootstrap Icons in tools/icons/
+     (MIT, see tools/icons/LICENSE).
+   - Third-party data and names are used as described in NOTICE.md (for example
+     O*NET data under CC BY 4.0, and IISE catalog titles used only as a map).
+
+MIT License:
 
 MIT License
 
-Copyright (c) 2026 IE Knowledgebase contributors
+Copyright (c) 2026 The IE Hub contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
