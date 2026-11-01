@@ -168,8 +168,7 @@ __HEAD_SCRIPT__
   .hp-more { margin-top: var(--s3); }
   /* Why it exists: a two-line headline (each sentence its own balanced line), numbered points, the answer */
   .hp-why .w-head { font-family: var(--display); font-size: clamp(28px, 3.6vw, 42px); line-height: 1.18; letter-spacing: -.015em; color: var(--text); margin: var(--s2) 0 var(--s6); }
-  .hp-why .w-head span { display: block; width: fit-content; text-wrap: balance; }
-  @media (min-width: 701px) { .hp-why .w-head.fit span { white-space: nowrap; } }
+  .hp-why .w-head span { display: block; text-wrap: balance; }
   .hp-why .acc { color: var(--accent); }
   .hp-why .w-rows { border-top: 1px solid var(--line); }
   .hp-why .w-row { display: grid; grid-template-columns: 190px 1fr; gap: var(--s5); padding: var(--s4) 0; border-bottom: 1px solid var(--line); }
