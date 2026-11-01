@@ -46,6 +46,8 @@ def icon(name, size=16):
 
 
 LOGO = ROOT / "tools" / "logo" / "header.svg.html"
+HUB_DATA = ROOT / "tools" / "hub.json"
+NIDHY = "https://nidhy.dev"
 
 
 def inject_logo(html):
@@ -54,6 +56,39 @@ def inject_logo(html):
     snippet = LOGO.read_text(encoding="utf-8").strip()
     return re.sub(r"__LOGO(?::([A-Za-z][A-Za-z0-9]*))?__",
                   lambda m: snippet.replace("__LOGO_ATTRS__", f' id="{m.group(1)}"' if m.group(1) else ""), html)
+
+
+def footer_html():
+    """The site footer, the same on every page: brand block, then Learn, The hub, About and Legal columns, then the
+    licences. Hub pillars come from tools/hub.json: a live pillar is a link, any other shows as "soon" without one."""
+    hub = json.loads(HUB_DATA.read_text(encoding="utf-8"))
+    full = re.search(r'<svg class="logo-full".*?</svg>', LOGO.read_text(encoding="utf-8"), re.S).group(0)
+    full = full.replace('class="logo-full"', 'class="ft-logo"').replace('width="120" height="27"', 'width="138" height="31"')
+    def col(title, items):
+        def li(t, h):
+            if h is None:
+                return f'<li><span class="soon">{t}<i>soon</i></span></li>'
+            rel = ' rel="noopener"' if h.startswith("http") else ""
+            return f'<li><a href="{h}"{rel}>{t}</a></li>'
+        lis = "".join(li(t, h) for t, h in items)
+        return f'<nav class="ft-col" aria-label="{title}"><p class="ft-h">{title}</p><ul>{lis}</ul></nav>'
+    learn = [("Catalog", "index.html"), ("Learning path", "index.html#tab=path"), ("Mind map", "index.html#tab=graph"),
+             ("Course coverage", f"{REPO_URL}/blob/main/ROADMAP.md")]
+    hubcol = [(p["name"], p["href"] if p["status"] == "live" else None) for p in hub["pillars"] if p["key"] != "learn"]
+    about = [("Site roadmap", "roadmap.html"), ("Sources", "sources.html"), ("__ICON:github:14__GitHub", REPO_URL),
+             ("Report an issue", f"{REPO_URL}/issues")]
+    legal = [("Notice", f"{REPO_URL}/blob/main/NOTICE.md"), ("Privacy", "privacy.html"), ("Terms", "terms.html")]
+    return ('<footer class="ft"><div class="ft-wrap"><div class="ft-top">'
+            f'<div class="ft-brand"><a class="ft-home" href="index.html" aria-label="The IE Hub, home">{full}</a>'
+            '<p>Industrial engineering, learned and built in the open. Free courses, worked projects and data you can rerun.</p>'
+            f'<p class="ft-by">Maintained by <a href="{NIDHY}" rel="noopener">Nidhin Dileepkumar</a></p></div>'
+            + col("Learn", learn) + col("The hub", hubcol) + col("About", about) + col("Legal", legal) +
+            '</div><div class="ft-bottom"><span>Content CC BY 4.0</span><span>Code MIT</span><span class="ft-domain">theiehub.com</span></div></div></footer>')
+
+
+def inject_footer(html):
+    """Replace every __FOOTER__ with the shared footer (before icons are injected, so its __ICON__ placeholders resolve)."""
+    return html.replace("__FOOTER__", footer_html()) if "__FOOTER__" in html else html
 
 
 def inject_icons(html):
@@ -482,7 +517,7 @@ def write(path, text):
 def fill(template_path, **slots):
     # Icons go into the template before the slots: course data must never be scanned for __ICON__
     # placeholders, or a label containing one would break the JSON it sits in.
-    tpl = inject_logo(inject_icons(template_path.read_text(encoding="utf-8")))
+    tpl = inject_logo(inject_icons(inject_footer(template_path.read_text(encoding="utf-8"))))
     for key, value in slots.items():
         marker = f"__{key}__"
         n = tpl.count(marker)

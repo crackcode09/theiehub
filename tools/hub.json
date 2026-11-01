@@ -1,0 +1,9 @@
+{
+  "_about": "The IE Hub's pillars. The footer reads this; the home page and the site roadmap will too. A pillar's status is live, soon or planned; only live pillars become links.",
+  "pillars": [
+    {"key": "learn", "name": "Learn", "status": "live", "href": "index.html"},
+    {"key": "projects", "name": "Projects", "status": "soon", "href": "projects.html"},
+    {"key": "insights", "name": "Insights", "status": "soon", "href": "insights.html"},
+    {"key": "collaborate", "name": "Collaborate", "status": "soon", "href": "collaborate.html"}
+  ]
+}

@@ -69,7 +69,6 @@
   .box { border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 8px; background: var(--surface); padding: var(--s3) var(--s4); margin: var(--s4) 0; font-size: 14.5px; color: var(--muted); }
   .box b { color: var(--text); }
   .small { font-size: 13px; color: var(--muted); }
-  footer .bi { vertical-align: -.15em; }
   .rm-progress { margin: var(--s5) 0 var(--s6); }
   .rm-bar { height: 6px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
   .rm-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); }
@@ -101,8 +100,6 @@
   table code { font-size: .85em; }
   nav.toc { font-family: var(--mono); font-size: 12.5px; color: var(--muted); margin-bottom: var(--s5); display: flex; flex-wrap: wrap; gap: 6px 14px; }
   nav.toc a { color: var(--muted); text-decoration: none; } .toc a:hover { color: var(--accent); }
-  footer { border-top: 1px solid var(--line); padding: var(--s5); text-align: center; font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
-  footer .frow { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 18px; line-height: 1.8; } footer .frow + .frow { margin-top: 4px; } footer .frow.muted { opacity: .8; } footer a { color: var(--muted); text-decoration: none; } footer a:hover { color: var(--accent); text-decoration: underline; }
   @media (max-width: 700px) {
     .topbar { padding: 8px var(--s3); gap: 8px; -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--bg); } .topbar .path { flex: 1; }
     .topbar nav.toggle { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: flex; padding: 6px var(--s3) calc(6px + env(safe-area-inset-bottom));
@@ -114,6 +111,23 @@
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
   .skip { position: absolute; left: -9999px; top: 8px; z-index: 40; padding: 6px 10px; background: var(--accent); color: var(--bg); border-radius: 6px; font-family: var(--mono); font-size: 12.5px; } .skip:focus { left: 8px; }
   @media print { .topbar, footer, .skip { display: none; } body { background: #fff; color: #000; } main { padding: 0; } a { color: inherit; } }
+
+  /* Footer (shared; markup from footer_html() in tools/roadmap_graph.py, links from tools/hub.json) */
+  footer.ft { border-top: 1px solid var(--line); background: var(--bg); color: var(--muted); font-family: var(--sans); font-size: 14px; line-height: 1.5; text-align: left; }
+  .ft a { color: var(--muted); text-decoration: none; } .ft a:hover { color: var(--text); }
+  .ft-wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--s7); }
+  .ft-top { display: grid; grid-template-columns: minmax(240px, 1.4fr) repeat(4, minmax(120px, 1fr)); gap: var(--s6); padding: var(--s7) 0 var(--s6); }
+  .ft-home { display: inline-block; } .ft-logo { display: block; }
+  .ft-brand p { margin: var(--s4) 0 0; line-height: 1.55; } .ft-brand .ft-by { margin-top: var(--s3); font-size: 13px; }
+  .ft-brand .ft-by a { color: var(--text); border-bottom: 1px solid var(--line-strong); } .ft-brand .ft-by a:hover { border-color: var(--accent); }
+  .ft-h { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--text); margin: 0 0 var(--s3); }
+  .ft-col ul { list-style: none; padding: 0; margin: 0; } .ft-col li { margin: 0 0 var(--s2); }
+  .ft-col .bi { vertical-align: -2px; margin-right: 6px; }
+  .ft .soon { color: var(--muted); cursor: default; }
+  .ft .soon i { font-style: normal; font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; border: 1px dashed var(--line-strong); border-radius: 4px; padding: 0 5px; margin-left: 6px; vertical-align: 1px; }
+  .ft-bottom { display: flex; flex-wrap: wrap; gap: 4px var(--s5); border-top: 1px solid var(--line); padding: var(--s4) 0 var(--s5); font-family: var(--mono); font-size: 12px; }
+  .ft-bottom .ft-domain { margin-left: auto; }
+  @media (max-width: 900px) { .ft-wrap { padding: 0 var(--s4); } .ft-top { grid-template-columns: 1fr 1fr; gap: var(--s5); padding-top: var(--s6); } .ft-brand { grid-column: 1 / -1; } }
 </style>
 </head>
 <body>
@@ -132,7 +146,7 @@
 <main id="main">
 __BODY__
 </main>
-<footer><div class="frow"><a href="index.html">catalog</a><a href="roadmap.html">site roadmap</a><a href="sources.html">sources</a><a href="https://github.com/crackcode09/theiehub/blob/main/NOTICE.md" rel="noopener">notice</a><a href="privacy.html">privacy</a><a href="terms.html">terms</a></div><div class="frow muted"><span>The IE Hub</span><span>by Nidhin</span><a href="https://github.com/crackcode09/theiehub" rel="noopener">__ICON:github:13__ GitHub</a><span>content CC BY 4.0</span><span>code MIT</span></div></footer>
+__FOOTER__
 <script>
   (function () {
     const root = document.documentElement;
