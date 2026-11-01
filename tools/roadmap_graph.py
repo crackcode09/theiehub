@@ -59,7 +59,7 @@ def inject_logo(html):
 def inject_icons(html):
     """Replace __ICON:name__ and __ICON:name:size__ placeholders in a template."""
     return re.sub(r"__ICON:([a-z0-9-]+)(?::(\d+))?__", lambda m: icon(m.group(1), int(m.group(2) or 16)), html)
-REPO_URL = "https://github.com/crackcode09/ie-knowledgebase"
+REPO_URL = "https://github.com/crackcode09/theiehub"
 
 # The site's dark-theme tokens (--green, --todo, --accent, --line, --text, --muted, --bg), so the README
 # picture matches the site. Fonts fall back to system faces: GitHub shows the SVG as an image, which

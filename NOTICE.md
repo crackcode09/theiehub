@@ -37,10 +37,10 @@ The site's interface icons are from [Bootstrap Icons](https://github.com/twbs/ic
 
 The pages load [D3](https://d3js.org/) (ISC, Mike Bostock), [marked](https://marked.js.org/) (MIT, Christopher Jeffrey and contributors) and [Anime.js](https://animejs.com/) (MIT, Julian Garnier) from a CDN at pinned versions; none is vendored.
 
-Content: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Code: [MIT](https://opensource.org/licenses/MIT). See [LICENSE](LICENSE). Attribution line: `From the IE Knowledgebase (github.com/crackcode09/ie-knowledgebase), CC BY 4.0.`
+Content: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Code: [MIT](https://opensource.org/licenses/MIT). See [LICENSE](LICENSE). Attribution line: `From the IE Knowledgebase (github.com/crackcode09/theiehub), CC BY 4.0.`
 
 ## Reporting a problem
 
-If you believe anything here infringes a copyright or trademark or reproduces material it should not, open an issue at <https://github.com/crackcode09/ie-knowledgebase/issues> saying which file, what the problem is and, for a rights claim, what you own and how to reach you. We will acknowledge it, take the specific material down while we look into a plausible claim, and reply with what we did. GitHub's own [DMCA process](https://docs.github.com/en/site-policy/content-removal-policies/dmca-takedown-policy) is also available.
+If you believe anything here infringes a copyright or trademark or reproduces material it should not, open an issue at <https://github.com/crackcode09/theiehub/issues> saying which file, what the problem is and, for a rights claim, what you own and how to reach you. We will acknowledge it, take the specific material down while we look into a plausible claim, and reply with what we did. GitHub's own [DMCA process](https://docs.github.com/en/site-policy/content-removal-policies/dmca-takedown-policy) is also available.
 
 The site's [Privacy Policy](https://theiehub.com/privacy.html) and [Terms of Use](https://theiehub.com/terms.html) are generated from `tools/legal/` by `tools/roadmap_graph.py`.
