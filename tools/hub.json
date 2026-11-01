@@ -1,9 +1,124 @@
 {
-  "_about": "The IE Hub's pillars. The footer reads this; the home page and the site roadmap will too. A pillar's status is live, soon or planned; only live pillars become links.",
+  "_about": "The IE Hub's pillars and the site roadmap. The footer and public/roadmap.html are built from this file (the home page will be too). Pillar status: live, soon or planned; only live pillars become links. Phase status: done, next, along (in progress alongside the others), planned or later. Updates list only what visitors notice: no hosting or repository details. __COURSES__, __MODULES__, __VERIFIED__, __COVERED__, __TOTAL__ and __OPEN__ are filled in from the courses at build time.",
   "pillars": [
-    {"key": "learn", "name": "Learn", "status": "live", "href": "index.html"},
-    {"key": "projects", "name": "Projects", "status": "soon", "href": "projects.html"},
-    {"key": "insights", "name": "Insights", "status": "soon", "href": "insights.html"},
-    {"key": "collaborate", "name": "Collaborate", "status": "soon", "href": "collaborate.html"}
+    {
+      "key": "learn",
+      "name": "Learn",
+      "status": "live",
+      "href": "index.html"
+    },
+    {
+      "key": "projects",
+      "name": "Projects",
+      "status": "soon",
+      "href": "projects.html"
+    },
+    {
+      "key": "insights",
+      "name": "Insights",
+      "status": "soon",
+      "href": "insights.html"
+    },
+    {
+      "key": "collaborate",
+      "name": "Collaborate",
+      "status": "soon",
+      "href": "collaborate.html"
+    }
+  ],
+  "updated": "2026-11-01",
+  "goal": "A free, open home for industrial engineering. It teaches with open courses and data you can rerun, explains in plain language, shows worked projects from problem to result, and opens the door to anyone who wants to review, propose or build. Further out: name a role, say <em>continuous improvement engineer</em>, and get a training plan through the courses here.",
+  "phases": [
+    {
+      "title": "Catalog",
+      "pillars": [
+        "learn"
+      ],
+      "status": "done",
+      "body": "Original courses grouped the way the IISE catalog groups the discipline, with a learning path, a mind map and an on-site reader that keeps your progress in your browser.",
+      "items": [
+        "__COURSES__ courses, __MODULES__ modules",
+        "__COVERED__ of __TOTAL__ catalog topics covered"
+      ]
+    },
+    {
+      "title": "Hub home",
+      "pillars": [
+        "hub"
+      ],
+      "status": "next",
+      "body": "The hub page at the site root with the map of the field; the catalog, learning path and mind map move to /learn; a new footer; this roadmap.",
+      "items": []
+    },
+    {
+      "title": "Trust",
+      "pillars": [
+        "learn"
+      ],
+      "status": "along",
+      "body": "Every course was written with AI assistance and stays draft until a named person verifies it. This runs alongside the other phases.",
+      "items": [
+        "Review board built",
+        "__VERIFIED__ of __COURSES__ courses verified; first goal: 2 to 3, with reviewer credits"
+      ]
+    },
+    {
+      "title": "Projects and Collaborate",
+      "pillars": [
+        "projects",
+        "collaborate"
+      ],
+      "status": "planned",
+      "body": "Worked projects from the course case companies, problem to result. A Collaborate page: review a course, propose one of the __OPEN__ open topics, start a project, through GitHub Discussions.",
+      "items": []
+    },
+    {
+      "title": "Insights",
+      "pillars": [
+        "insights"
+      ],
+      "status": "planned",
+      "body": "Short articles in plain language: how a problem was solved, a paper explained, a tool reviewed. First three, then two a month.",
+      "items": []
+    },
+    {
+      "title": "Role profiles",
+      "pillars": [
+        "learn"
+      ],
+      "status": "planned",
+      "body": "One profile per target role from O*NET and BLS, ranked by importance and mapped to the modules that teach it. The gaps feed the course list.",
+      "items": []
+    },
+    {
+      "title": "Advisor",
+      "pillars": [
+        "learn"
+      ],
+      "status": "later",
+      "body": "Pick a role, say what you already know, and get a training plan through the courses here, with every focus point citing its source.",
+      "items": []
+    },
+    {
+      "title": "Keeping current and growth",
+      "pillars": [
+        "hub"
+      ],
+      "status": "later",
+      "body": "Sources refreshed on a schedule, with what changed shown per role; a newsletter, outreach to university IE departments, guest authors.",
+      "items": []
+    }
+  ],
+  "updates": [
+    {
+      "date": "2026-11-01",
+      "pillar": "hub",
+      "text": "The site is now at theiehub.com."
+    },
+    {
+      "date": "2026-10-31",
+      "pillar": "hub",
+      "text": "The IE Hub name and logo adopted."
+    }
   ]
 }

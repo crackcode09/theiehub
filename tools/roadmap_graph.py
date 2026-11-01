@@ -86,6 +86,41 @@ def footer_html():
             '</div><div class="ft-bottom"><span>Content CC BY 4.0</span><span>Code MIT</span><span class="ft-domain">theiehub.com</span></div></div></footer>')
 
 
+STATUS_LABEL = {"done": "done", "next": "next", "along": "in progress", "planned": "planned", "later": "later"}
+PILLAR_NAME = {"hub": "Hub", "learn": "Learn", "projects": "Projects", "insights": "Insights", "collaborate": "Collaborate"}
+
+
+def roadmap_parts():
+    """The generated pieces of public/roadmap.html, all from tools/hub.json: the date, the goal, the summary numbers,
+    the phase bar, the pillar filter, the phase timeline and the recent updates. Course counts stay as __COURSES__ etc.
+    placeholders here; write_html fills them in with the rest of the page."""
+    hub = json.loads(HUB_DATA.read_text(encoding="utf-8"))
+    phases = hub["phases"]
+    done = sum(1 for p in phases if p["status"] == "done")
+    seg = {"done": "done", "next": "active", "along": "active"}
+    bar = "".join(f'<i class="{seg.get(p["status"], "")}"></i>' for p in phases)
+    keys = []
+    for p in phases:
+        keys += [k for k in p["pillars"] if k not in keys]
+    filt = '<button type="button" aria-pressed="true" data-f="">all</button>' + "".join(
+        f'<button type="button" aria-pressed="false" data-f="{k}">{k}</button>' for k in PILLAR_NAME if k in keys)
+    lis = []
+    for i, p in enumerate(phases, 1):
+        cls = {"done": "done", "next": "active", "along": "along"}.get(p["status"], "later")
+        open_ = p["status"] == "next"
+        pill = " · ".join(PILLAR_NAME[k] for k in p["pillars"])
+        items = ("<ul>" + "".join(f"<li>{x}</li>" for x in p["items"]) + "</ul>") if p["items"] else ""
+        lis.append(f'<li class="{cls}" id="phase-{i}" data-p="{" ".join(p["pillars"])}">'
+                   f'<button type="button" class="tl-head" aria-expanded="{str(open_).lower()}" aria-controls="phase-{i}-body">'
+                   f'<span class="tl-dot"></span><span class="tl-n">{i}</span><span class="tl-title">{p["title"]}</span>'
+                   f'<span class="tl-pill">{pill}</span><span class="tl-status">{STATUS_LABEL[p["status"]]}</span>__ICON:chevron-right:14__</button>'
+                   f'<div class="tl-body" id="phase-{i}-body"{"" if open_ else " hidden"}><p>{p["body"]}</p>{items}</div></li>')
+    upd = "".join(f'<li><time datetime="{u["date"]}">{u["date"]}</time><div><span class="tag">{u["pillar"]}</span>{u["text"]}</div></li>'
+                  for u in hub["updates"])
+    return {"RM_UPDATED": hub["updated"], "RM_GOAL": hub["goal"], "RM_DONE": str(done), "RM_PHASES": str(len(phases)),
+            "RM_BAR": bar, "RM_FILTER": filt, "RM_TIMELINE": "".join(lis), "RM_UPDATES": upd}
+
+
 def inject_footer(html):
     """Replace every __FOOTER__ with the shared footer (before icons are injected, so its __ICON__ placeholders resolve)."""
     return html.replace("__FOOTER__", footer_html()) if "__FOOTER__" in html else html
@@ -586,8 +621,18 @@ def write_html(cats):
     write(READER_OUT, fill(READER_TEMPLATE, DATA=enc(slim)))
     for key, title in LEGAL_PAGES.items():
         # hand-written bodies may use icons; the sources page is built from course tables, so it is not scanned
-        body = sources_page(model) if key == "sources" else inject_icons((ROOT / "tools" / "legal" / f"{key}.html").read_text(encoding="utf-8"))
-        for k, v in {"COURSES": model["built"], "VERIFIED": model["verified"], "COVERED": model["built"] + model["covered"], "TOTAL": model["total"]}.items():
+        if key == "sources":
+            body = sources_page(model)
+        else:
+            body = (ROOT / "tools" / "legal" / f"{key}.html").read_text(encoding="utf-8")
+            if key == "roadmap":
+                for k, v in roadmap_parts().items():
+                    body = body.replace(f"__{k}__", v)
+            body = inject_icons(body)
+        modules = sum(1 for n in model["nodes"] if n["type"] == "module")
+        covered = model["built"] + model["covered"]
+        for k, v in {"COURSES": model["built"], "MODULES": modules, "VERIFIED": model["verified"], "COVERED": covered,
+                     "TOTAL": model["total"], "OPEN": model["total"] - covered}.items():
             body = body.replace(f"__{k}__", str(v))
         write(PUBLIC / f"{key}.html", fill(LEGAL_TEMPLATE, TITLE=title, KEY=key, BODY=body))
     return model

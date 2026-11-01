@@ -29,7 +29,7 @@ No topic bullet list under the title: the sessions table already lists the topic
 
 ## Site templates
 
-One footer: every page's footer comes from `footer_html()` in `tools/roadmap_graph.py`, placed with `__FOOTER__` in each template; edit it there, never in a page. The hub's pillars and their status (`live`, `soon`, `planned`) are in `tools/hub.json`; a pillar becomes a footer link only when it is `live`.
+One footer: every page's footer comes from `footer_html()` in `tools/roadmap_graph.py`, placed with `__FOOTER__` in each template; edit it there, never in a page. The hub's pillars and their status (`live`, `soon`, `planned`) are in `tools/hub.json`; a pillar becomes a footer link only when it is `live`. The site roadmap (`public/roadmap.html`) is built from the same file: its phases, their status, the goal and the recent updates. When a phase moves, change its `status` and add a line to `updates` (only what visitors notice; no hosting or repository details), and bump `updated`.
 
 One width per column: inside the reader document, the catalog page and the legal pages, prose, tables, code and figures share the same right edge. Set the width once on the column (`.doc`, `.page`, `main`) and never on the text inside it; `python tools/roadmap_graph.py` refuses to build if a rule narrows content inside a column.
 
