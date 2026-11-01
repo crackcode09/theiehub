@@ -52,7 +52,7 @@
         "hub"
       ],
       "status": "done",
-      "body": "The hub page at the site root with the map of the field; the catalog, learning path and mind map at /learn; a new footer; this roadmap.",
+      "body": "The hub page at the site root; the catalog, learning path and mind map at /learn; a top bar for the whole hub; a new footer; this roadmap.",
       "items": []
     },
     {
@@ -132,7 +132,8 @@
     }
   ],
   "start": [
-    "introduction-to-industrial-engineering",
+    "human-centered-ai",
+    "efficient-ai",
     "process-mapping",
     "measurement-and-basic-statistics",
     "voice-of-the-customer"

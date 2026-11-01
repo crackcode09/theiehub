@@ -123,9 +123,57 @@ def roadmap_parts():
             "RM_BAR": bar, "RM_FILTER": filt, "RM_TIMELINE": "".join(lis), "RM_UPDATES": upd}
 
 
+# The home page hero: the same title, map lines, search and animation as the old catalog front door.
+HUB_HERO = """<section class="hero" id="hero">
+  <svg class="bgmap" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="var(--accent)" stroke-width="1.2"><path d="M500 150 C380 150 380 60 260 60"/><path d="M500 150 C380 150 380 150 260 150"/><path d="M500 150 C380 150 380 240 260 240"/><path d="M500 150 C620 150 620 40 740 40"/><path d="M500 150 C620 150 620 120 740 120"/><path d="M500 150 C620 150 620 200 740 200"/><path d="M500 150 C620 150 620 270 740 270"/><path d="M260 60 C200 60 200 30 140 30"/><path d="M260 60 C200 60 200 90 140 90"/><path d="M260 150 C200 150 200 130 140 130"/><path d="M260 150 C200 150 200 175 140 175"/><path d="M260 240 C200 240 200 225 140 225"/><path d="M740 120 C800 120 800 100 860 100"/><path d="M740 120 C800 120 800 145 860 145"/><path d="M740 200 C800 200 800 185 860 185"/><path d="M740 200 C800 200 800 220 860 220"/></g>
+    <g fill="var(--accent)"><circle cx="500" cy="150" r="16"/><circle cx="260" cy="60" r="6"/><circle cx="260" cy="150" r="6"/><circle cx="260" cy="240" r="6"/><circle cx="740" cy="40" r="6"/><circle cx="740" cy="120" r="6"/><circle cx="740" cy="200" r="6"/><circle cx="740" cy="270" r="6"/></g>
+    <g fill="var(--green)"><circle cx="140" cy="30" r="4"/><circle cx="140" cy="90" r="4"/><circle cx="140" cy="130" r="4"/><circle cx="140" cy="175" r="4"/><circle cx="140" cy="225" r="4"/><circle cx="860" cy="100" r="4"/><circle cx="860" cy="145" r="4"/><circle cx="860" cy="185" r="4"/><circle cx="860" cy="220" r="4"/></g>
+  </svg>
+  <div class="hero-in">
+    <div class="eyebrow">free · open · original · reviewable</div>
+    <h1 aria-label="The IE Hub"><span class="type" aria-hidden="true"><span class="ghost">The IE <span class="md">Hub</span></span><span class="live"><span id="tyA">The IE </span><span class="md" id="tyB">Hub</span><span class="cursor"></span></span></span></h1>
+    <p class="lede">Industrial engineering, learned and built in the open.</p>
+    <form class="ask" id="ask" role="search">
+      <input type="search" id="askInput" placeholder="What do you want to learn?" aria-label="Search courses and modules" autocomplete="off" spellcheck="false">
+      <button type="submit">search</button>
+    </form>
+    <div class="pop"><b>start here</b>__CHIPS__</div>
+    <div class="stats">
+      <div class="stat"><b class="num" data-n="__COURSES__">__COURSES__</b><small>courses</small></div>
+      <div class="stat"><b class="num" data-n="__MODULES__">__MODULES__</b><small>modules</small></div>
+      <div class="stat"><b>__COVERED__ / __TOTAL__</b><small>catalog topics</small></div>
+      <div class="stat"><b class="num" data-n="__VERIFIED__">__VERIFIED__</b><small>verified</small></div>
+    </div>
+    <div class="byline"><a class="stat link" href="roadmap.html">site roadmap →</a></div>
+    <p class="fine"><b>Preview release.</b> Every course is written with AI assistance and stays <span class="tag draft">draft</span> until a reviewer checks it against the <a href="https://github.com/crackcode09/theiehub/blob/main/REVIEW.md" rel="noopener">review checklist</a>. Only public IISE course titles and topic outlines were used as a map; no IISE material appears here (<a href="terms.html#originality">originality notice</a>). Progress is saved in this browser only.</p>
+  </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/4.5.0/anime.umd.min.js" integrity="sha512-dnhflec5WaXvpVYrt0oWfe0iUyWpjNiZbxkjrhNu9WAWWHLX7VqqyxCZHL7dWCrwj6lN+XGN9FtiWIBgX2b/PA==" crossorigin="anonymous"></script>
+<script>
+  (function () {
+    // the search opens the catalog with the query: /learn?q=...
+    document.getElementById('ask').addEventListener('submit', e => { e.preventDefault(); const q = document.getElementById('askInput').value.trim(); location.href = 'learn.html' + (q ? '?q=' + encodeURIComponent(q) : ''); });
+    const motion = typeof anime !== 'undefined' && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!motion) return;
+    try {   // decorative only: a library hiccup must never stop the page
+      anime.animate(anime.svg.createDrawable([...document.querySelectorAll('#hero .bgmap path')]), { draw: ['0 0', '0 1'], duration: 900, delay: anime.stagger(30), ease: 'outQuad' });
+      anime.animate('#hero .hero-in > *', { opacity: [0, 1], y: [10, 0], duration: 460, delay: anime.stagger(55), ease: 'outCubic' });
+      document.querySelectorAll('#hero .num').forEach(el => { const n = +el.dataset.n; if (!n) return; const o = { v: 0 }; anime.animate(o, { v: n, duration: 500, ease: 'outCubic', modifier: anime.utils.round(0), onUpdate: () => { el.textContent = o.v; } }); });
+      const full = 'The IE Hub', split = 7, tyA = document.getElementById('tyA'), tyB = document.getElementById('tyB'), ty = { n: full.length };
+      const showTy = () => { const k = Math.round(ty.n); tyA.textContent = full.slice(0, Math.min(k, split)); tyB.textContent = full.slice(split, Math.max(k, split)); };
+      anime.createTimeline({ loop: true, loopDelay: 120, onUpdate: showTy })
+        .add(ty, { n: [0, full.length], duration: 1100, ease: 'linear', modifier: anime.utils.round(0) }, 200)
+        .add(ty, { n: 0, duration: 550, ease: 'linear', modifier: anime.utils.round(0) }, '+=4200');
+    } catch (e) {}
+  })();
+</script>"""
+
+
 def hub_page(model):
-    """Body of public/index.html, the hub home: hero, live numbers, the four pillars (from tools/hub.json), start-here
-    courses, the map of the field and the maintainer line. A pillar that is not live links to its roadmap phase."""
+    """Body of public/index.html, the hub home: the hero (title typing over the map lines, the tagline, a search that
+    opens /learn, start-here courses, live numbers, the roadmap link and the preview note), then the four pillars from
+    tools/hub.json. A pillar that is not live links to its roadmap phase."""
     hub = json.loads(HUB_DATA.read_text(encoding="utf-8"))
     courses = {n["id"][7:]: n for n in model["nodes"] if n["type"] == "course"}
     phase_of = {}
@@ -139,34 +187,33 @@ def hub_page(model):
         else:
             tag, link = '<span class="hp-tag soon">coming</span>', f'<a class="hp-go" href="roadmap.html#phase-{phase_of[p["key"]]}">On the roadmap →</a>'
         cards.append(f'<div class="hp-card">{tag}<h3>{p["name"]}</h3><p>{p["blurb"]}</p>{link}</div>')
-    chips = "".join(f'<a class="hp-chip" href="course.html?c={slug}">{courses[slug]["label"]}</a>' for slug in hub["start"])
-    cats = sum(1 for n in model["nodes"] if n["type"] == "category")
-    return f"""<section class="hp-hero">
-  <div class="hp-eyebrow">free · open · original · reviewable</div>
-  <h1>Industrial engineering, <em>learned and built in the open.</em></h1>
-  <p class="hp-lede">The IE Hub is a free home for industrial engineers and students: open courses today, with worked projects, plain-language insights and a place to build together on the way.</p>
-  <div class="hp-ctas"><a class="btn primary" href="learn.html">Start learning →</a><a class="btn" href="roadmap.html">See the roadmap</a></div>
-  <div class="hp-stats"><div><b>__COURSES__</b><small>courses</small></div><div><b>__MODULES__</b><small>modules</small></div><div><b>__COVERED__ / __TOTAL__</b><small>catalog topics</small></div><div><b>__VERIFIED__</b><small>verified so far</small></div></div>
-</section>
-
+    chips = "".join(f'<a class="chip" href="learn.html#course:{slug}">{courses[slug]["label"]}</a>' for slug in hub["start"])
+    return HUB_HERO.replace("__CHIPS__", chips) + f"""
 <h2 id="pillars">What's here</h2>
 <div class="hp-pillars">{"".join(cards)}</div>
-<div class="hp-chips"><span class="hp-lbl">start here</span>{chips}</div>
-
-<h2 id="map">The map of the field</h2>
-<p class="hp-intro">Every course and planned topic on one map, grouped the way the IISE catalog groups them. Built courses are green.</p>
-<div class="hp-map">
-  <a href="learn.html#tab=graph" aria-label="Open the interactive mind map"><img src="roadmap.svg" width="1000" height="1000" alt="Radial map of the IE Knowledgebase: {cats} categories around the centre, with each course and planned topic around them. Built courses are green."></a>
-  <ul>
-    <li><b>{cats} categories, __TOTAL__ topics.</b> The same groups as the IISE course catalog, plus a few it does not cover.</li>
-    <li><b>Interactive on the Learn page.</b> Zoom, show modules, follow prerequisite arrows and jump into any course.</li>
-    <li><b>Shows the gaps.</b> Every hollow dot is a topic still waiting for a course: __OPEN__ of them.</li>
-    <li><a class="hp-go" href="learn.html#tab=graph">Open the interactive mind map →</a></li>
-  </ul>
-</div>
-
-<div class="hp-maint"><p><b>Maintained by Nidhin Dileepkumar</b>, an industrial engineer. About me and my work: <a href="{NIDHY}" rel="noopener">nidhy.dev</a>.</p></div>
 """
+
+
+
+def hubnav_html(current=""):
+    """The hub's top-bar navigation, the same on every page: each pillar from tools/hub.json (a live one is a link,
+    any other a quiet "soon" label hidden on phones), then Roadmap. `current` is the pillar key or "roadmap"."""
+    hub = json.loads(HUB_DATA.read_text(encoding="utf-8"))
+    items = []
+    for p in hub["pillars"]:
+        if p["status"] == "live":
+            cur = ' aria-current="page"' if p["key"] == current else ""
+            items.append(f'<a href="{p["href"]}"{cur}>{p["name"]}</a>')
+        else:
+            items.append(f'<span class="soon" title="coming soon">{p["name"]}</span>')
+    cur = ' aria-current="page"' if current == "roadmap" else ""
+    items.append(f'<a href="roadmap.html"{cur}>Roadmap</a>')
+    return '<nav class="hubnav" aria-label="The IE Hub">' + "".join(items) + "</nav>"
+
+
+def inject_hubnav(html):
+    """Replace __HUBNAV__ and __HUBNAV:key__ with the hub navigation, marking that key as the current page."""
+    return re.sub(r"__HUBNAV(?::([a-z]+))?__", lambda m: hubnav_html(m.group(1) or ""), html)
 
 
 def inject_footer(html):
@@ -600,7 +647,7 @@ def write(path, text):
 def fill(template_path, **slots):
     # Icons go into the template before the slots: course data must never be scanned for __ICON__
     # placeholders, or a label containing one would break the JSON it sits in.
-    tpl = inject_logo(inject_icons(inject_footer(template_path.read_text(encoding="utf-8"))))
+    tpl = inject_logo(inject_icons(inject_hubnav(inject_footer(template_path.read_text(encoding="utf-8")))))
     for key, value in slots.items():
         marker = f"__{key}__"
         n = tpl.count(marker)
@@ -689,14 +736,14 @@ def write_html(cats):
             body = inject_icons(body)
         body = fill_counts(body, model)
         write(PUBLIC / f"{key}.html", fill(LEGAL_TEMPLATE, TITLE=f"{title} · The IE Hub", DESC=f"{title} for The IE Hub, free and open industrial engineering courses.",
-                                           PATH=f"{key}.html", MAIN_ATTR="", HEAD_SCRIPT="", BODY=body))
+                                           PATH=f"{key}.html", NAV=hubnav_html("roadmap" if key == "roadmap" else ""), MAIN_ATTR="", HEAD_SCRIPT="", BODY=body))
     # The hub home. Old catalog links (/#course:…, /#tab=…, /index.html#…) carry a fragment the server never sees,
     # so a script in the head forwards any fragment that is not one of this page's own anchors to learn.html.
     forward = ("<script>(function () { const h = location.hash.slice(1); "
-               "if (h && !['main', 'pillars', 'map'].includes(h)) location.replace('learn.html' + location.hash); })();</script>")
+               "if (h && !['main', 'pillars', 'hero'].includes(h)) location.replace('learn.html' + location.hash); })();</script>")
     write(HUB_OUT, fill(LEGAL_TEMPLATE, TITLE="The IE Hub · industrial engineering, learned and built in the open",
                         DESC="Free, open industrial engineering: original courses with data you can rerun, a learning path, a mind map of the field, and worked projects and insights on the way.",
-                        PATH="", MAIN_ATTR=' class="wide"', HEAD_SCRIPT=forward, BODY=fill_counts(inject_icons(hub_page(model)), model)))
+                        PATH="", NAV=hubnav_html(), MAIN_ATTR=' class="wide"', HEAD_SCRIPT=forward, BODY=fill_counts(inject_icons(hub_page(model)), model)))
     return model
 
 
