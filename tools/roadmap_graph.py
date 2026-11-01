@@ -184,7 +184,10 @@ def hub_page(model):
     phases = list(enumerate(hub["phases"], 1))
     now = [(i, p) for i, p in phases if p["status"] == "along"]
     nxt = [(i, p) for i, p in phases if p["status"] == "next"][:1]
-    why = "".join(f"<p>{p}</p>" for p in hub["why"])
+    w = hub["why"]
+    why = (f'<p class="w-head"><span>{w["headline"][0]}</span><span class="acc">{w["headline"][1]}</span></p><div class="w-rows">'
+           + "".join(f'<div class="w-row"><span class="w-tag">{p["tag"]}</span><p>{p["lead"]} <span class="w-rest">{p["rest"]}</span></p></div>' for p in w["points"])
+           + f'</div><p class="w-ans">{w["answer"][0]} <span class="acc">{w["answer"][1]}</span></p><p class="w-open">{w["open"]}</p>')
     return HUB_HERO.replace("__ABOUT__", hub["about"]) + f"""
 <h2 id="why">Why it exists</h2>
 <div class="hp-why">{why}</div>
