@@ -41,11 +41,11 @@ The **Checks** workflow (`.github/workflows/checks.yml`) runs on every pull requ
 
 ```text
 main   what is published at theiehub.com (Cloudflare Pages builds from it)
-  └── dev   where every change lands first, by pull request (Cloudflare builds a preview at dev.ie-knowledgebase.pages.dev)
+  └── dev   where every change lands first, by pull request (Cloudflare builds a private preview at dev.theiehub.com)
         └── <type>/<short-name>   one branch per change, from dev (feat/, fix/, docs/, style/, perf/, review/)
 ```
 
 - Open every pull request against `dev`, one independent change per branch. Branches are deleted automatically when merged.
 - A release is a pull request from `dev` to `main`, merged with a merge commit so `dev` stays an ancestor of `main`.
-- Before merging a release, check the `dev` preview: the catalog, a course with a figure, the mind map and the privacy page. Only `main` and `dev` get Cloudflare builds; feature branches do not.
+- Before merging a release, check the `dev` preview (private: it sits behind Cloudflare Access and only the maintainer can open it): the catalog, a course with a figure, the mind map and the privacy page. Only `main` and `dev` get Cloudflare builds; feature branches do not.
 - `main` and `dev` are protected: no direct pushes, no force pushes, no deletion, and every change arrives by pull request. The rules apply to maintainers too.
