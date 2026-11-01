@@ -31,7 +31,7 @@ See [ROADMAP.md](ROADMAP.md) for a checklist of what is built and what is still 
 
 Progress ticks are kept in your browser only; there are no accounts and no tracking. Light and dark themes follow your system setting.
 
-The site is generated into `public/` by `python tools/roadmap_graph.py` (standard library only). It is published on Cloudflare Pages at <https://theiehub.com/>: on each push to `main`, `python tools/build_site.py` puts the pages from `public/` and the `courses/` folder side by side in `_site/`, which is what gets served. Never edit `public/` by hand; edit the templates in `tools/` and rebuild.
+The site is generated into `public/` by `python tools/roadmap_graph.py` (standard library only). It is published on Cloudflare Pages at <https://theiehub.com/>: on each push to `main`, `python tools/build_site.py` puts the pages from `public/` and the `courses/` folder side by side in `_site/`, which is what gets served. Pushes to `dev` build a private preview at `dev.theiehub.com` (maintainer only) for checking a release before it goes out. Never edit `public/` by hand; edit the templates in `tools/` and rebuild.
 
 Suggested order without a track: Measurement & Basic Statistics, Process Mapping and Voice of the Customer, then Charting Process Behavior, then Fundamentals of Hypothesis Testing, then Design for Six Sigma, then Root Cause Analysis. Kaizen Leader and Lean Methods Accelerator have no prerequisites and can be taken at any point. The tracks themselves are defined in [roles/tracks.md](roles/tracks.md).
 
