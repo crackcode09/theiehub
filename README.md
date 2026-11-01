@@ -1,4 +1,9 @@
-<img src="public/apple-touch-icon.png" alt="The IE Hub logo" width="80" align="right">
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/the-ie-hub-logo-on-dark.svg">
+    <img src=".github/assets/the-ie-hub-logo-on-light.svg" alt="The IE Hub" width="360">
+  </picture>
+</p>
 
 # The IE Hub
 
