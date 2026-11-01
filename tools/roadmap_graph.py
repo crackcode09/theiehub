@@ -1,5 +1,6 @@
 """Draw ROADMAP.md as a radial knowledge graph (roadmap.svg) and build the
-interactive site (public/index.html, public/course.html) from the roadmap and course READMEs.
+interactive site (public/index.html the hub home, public/learn.html the catalog, public/course.html the reader)
+from the roadmap, the course READMEs and tools/hub.json.
 The site lives in public/ and reads courses/ beside it; tools/build_site.py assembles both for hosting.
 
 Usage:  python tools/roadmap_graph.py
@@ -15,7 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "ROADMAP.md"
 PUBLIC = ROOT / "public"
 OUT = PUBLIC / "roadmap.svg"
-HTML_OUT = PUBLIC / "index.html"
+HTML_OUT = PUBLIC / "learn.html"
+HUB_OUT = PUBLIC / "index.html"
 TEMPLATE = ROOT / "tools" / "roadmap_template.html"
 READER_OUT = PUBLIC / "course.html"
 READER_TEMPLATE = ROOT / "tools" / "reader_template.html"
@@ -72,7 +74,7 @@ def footer_html():
             return f'<li><a href="{h}"{rel}>{t}</a></li>'
         lis = "".join(li(t, h) for t, h in items)
         return f'<nav class="ft-col" aria-label="{title}"><p class="ft-h">{title}</p><ul>{lis}</ul></nav>'
-    learn = [("Catalog", "index.html"), ("Learning path", "index.html#tab=path"), ("Mind map", "index.html#tab=graph"),
+    learn = [("Catalog", "learn.html"), ("Learning path", "learn.html#tab=path"), ("Mind map", "learn.html#tab=graph"),
              ("Course coverage", f"{REPO_URL}/blob/main/ROADMAP.md")]
     hubcol = [(p["name"], p["href"] if p["status"] == "live" else None) for p in hub["pillars"] if p["key"] != "learn"]
     about = [("Site roadmap", "roadmap.html"), ("Sources", "sources.html"), ("__ICON:github:14__GitHub", REPO_URL),
@@ -119,6 +121,52 @@ def roadmap_parts():
                   for u in hub["updates"])
     return {"RM_UPDATED": hub["updated"], "RM_GOAL": hub["goal"], "RM_DONE": str(done), "RM_PHASES": str(len(phases)),
             "RM_BAR": bar, "RM_FILTER": filt, "RM_TIMELINE": "".join(lis), "RM_UPDATES": upd}
+
+
+def hub_page(model):
+    """Body of public/index.html, the hub home: hero, live numbers, the four pillars (from tools/hub.json), start-here
+    courses, the map of the field and the maintainer line. A pillar that is not live links to its roadmap phase."""
+    hub = json.loads(HUB_DATA.read_text(encoding="utf-8"))
+    courses = {n["id"][7:]: n for n in model["nodes"] if n["type"] == "course"}
+    phase_of = {}
+    for i, p in enumerate(hub["phases"], 1):
+        for k in p["pillars"]:
+            phase_of.setdefault(k, i)
+    cards = []
+    for p in hub["pillars"]:
+        if p["status"] == "live":
+            tag, link = '<span class="hp-tag live">live</span>', f'<a class="hp-go" href="{p["href"]}">{p["cta"]} →</a>'
+        else:
+            tag, link = '<span class="hp-tag soon">coming</span>', f'<a class="hp-go" href="roadmap.html#phase-{phase_of[p["key"]]}">On the roadmap →</a>'
+        cards.append(f'<div class="hp-card">{tag}<h3>{p["name"]}</h3><p>{p["blurb"]}</p>{link}</div>')
+    chips = "".join(f'<a class="hp-chip" href="course.html?c={slug}">{courses[slug]["label"]}</a>' for slug in hub["start"])
+    cats = sum(1 for n in model["nodes"] if n["type"] == "category")
+    return f"""<section class="hp-hero">
+  <div class="hp-eyebrow">free · open · original · reviewable</div>
+  <h1>Industrial engineering, <em>learned and built in the open.</em></h1>
+  <p class="hp-lede">The IE Hub is a free home for industrial engineers and students: open courses today, with worked projects, plain-language insights and a place to build together on the way.</p>
+  <div class="hp-ctas"><a class="btn primary" href="learn.html">Start learning →</a><a class="btn" href="roadmap.html">See the roadmap</a></div>
+  <div class="hp-stats"><div><b>__COURSES__</b><small>courses</small></div><div><b>__MODULES__</b><small>modules</small></div><div><b>__COVERED__ / __TOTAL__</b><small>catalog topics</small></div><div><b>__VERIFIED__</b><small>verified so far</small></div></div>
+</section>
+
+<h2 id="pillars">What's here</h2>
+<div class="hp-pillars">{"".join(cards)}</div>
+<div class="hp-chips"><span class="hp-lbl">start here</span>{chips}</div>
+
+<h2 id="map">The map of the field</h2>
+<p class="hp-intro">Every course and planned topic on one map, grouped the way the IISE catalog groups them. Built courses are green.</p>
+<div class="hp-map">
+  <a href="learn.html#tab=graph" aria-label="Open the interactive mind map"><img src="roadmap.svg" width="1000" height="1000" alt="Radial map of the IE Knowledgebase: {cats} categories around the centre, with each course and planned topic around them. Built courses are green."></a>
+  <ul>
+    <li><b>{cats} categories, __TOTAL__ topics.</b> The same groups as the IISE course catalog, plus a few it does not cover.</li>
+    <li><b>Interactive on the Learn page.</b> Zoom, show modules, follow prerequisite arrows and jump into any course.</li>
+    <li><b>Shows the gaps.</b> Every hollow dot is a topic still waiting for a course: __OPEN__ of them.</li>
+    <li><a class="hp-go" href="learn.html#tab=graph">Open the interactive mind map →</a></li>
+  </ul>
+</div>
+
+<div class="hp-maint"><p><b>Maintained by Nidhin Dileepkumar</b>, an industrial engineer. About me and my work: <a href="{NIDHY}" rel="noopener">nidhy.dev</a>.</p></div>
+"""
 
 
 def inject_footer(html):
@@ -610,6 +658,16 @@ def sources_page(model):
     return "\n".join(parts)
 
 
+def fill_counts(text, model):
+    """Fill __COURSES__, __MODULES__, __VERIFIED__, __COVERED__, __TOTAL__ and __OPEN__ from the course model."""
+    modules = sum(1 for n in model["nodes"] if n["type"] == "module")
+    covered = model["built"] + model["covered"]
+    for k, v in {"COURSES": model["built"], "MODULES": modules, "VERIFIED": model["verified"], "COVERED": covered,
+                 "TOTAL": model["total"], "OPEN": model["total"] - covered}.items():
+        text = text.replace(f"__{k}__", str(v))
+    return text
+
+
 def write_html(cats):
     lint_templates()
     model = build_model(cats)
@@ -629,12 +687,16 @@ def write_html(cats):
                 for k, v in roadmap_parts().items():
                     body = body.replace(f"__{k}__", v)
             body = inject_icons(body)
-        modules = sum(1 for n in model["nodes"] if n["type"] == "module")
-        covered = model["built"] + model["covered"]
-        for k, v in {"COURSES": model["built"], "MODULES": modules, "VERIFIED": model["verified"], "COVERED": covered,
-                     "TOTAL": model["total"], "OPEN": model["total"] - covered}.items():
-            body = body.replace(f"__{k}__", str(v))
-        write(PUBLIC / f"{key}.html", fill(LEGAL_TEMPLATE, TITLE=title, KEY=key, BODY=body))
+        body = fill_counts(body, model)
+        write(PUBLIC / f"{key}.html", fill(LEGAL_TEMPLATE, TITLE=f"{title} · The IE Hub", DESC=f"{title} for The IE Hub, free and open industrial engineering courses.",
+                                           PATH=f"{key}.html", MAIN_ATTR="", HEAD_SCRIPT="", BODY=body))
+    # The hub home. Old catalog links (/#course:…, /#tab=…, /index.html#…) carry a fragment the server never sees,
+    # so a script in the head forwards any fragment that is not one of this page's own anchors to learn.html.
+    forward = ("<script>(function () { const h = location.hash.slice(1); "
+               "if (h && !['main', 'pillars', 'map'].includes(h)) location.replace('learn.html' + location.hash); })();</script>")
+    write(HUB_OUT, fill(LEGAL_TEMPLATE, TITLE="The IE Hub · industrial engineering, learned and built in the open",
+                        DESC="Free, open industrial engineering: original courses with data you can rerun, a learning path, a mind map of the field, and worked projects and insights on the way.",
+                        PATH="", MAIN_ATTR=' class="wide"', HEAD_SCRIPT=forward, BODY=fill_counts(inject_icons(hub_page(model)), model)))
     return model
 
 
@@ -644,7 +706,7 @@ if __name__ == "__main__":
     write(OUT, render(cats))
     print(f"wrote {OUT.relative_to(ROOT)}: {sum(len(c['items']) for c in cats)} courses in {len(cats)} categories")
     model = write_html(cats)
-    print(f"wrote {READER_OUT.relative_to(ROOT)}")
+    print(f"wrote {READER_OUT.relative_to(ROOT)} and {HUB_OUT.relative_to(ROOT)}")
     kinds, edges = {}, {}
     for n in model["nodes"]:
         kinds[n["type"]] = kinds.get(n["type"], 0) + 1

@@ -3,12 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The IE Hub · free industrial engineering courses</title>
+<title>Learn · The IE Hub · free industrial engineering courses</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="favicon-16.png" type="image/png" sizes="16x16">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="description" content="The IE Hub: catalog, learning path and map of the IE Knowledgebase courses on industrial engineering, with prerequisites and local progress tracking.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The IE Hub">
+<meta property="og:title" content="Learn · The IE Hub">
+<meta property="og:description" content="Catalog, learning path and mind map of free, open industrial engineering courses, with prerequisites and local progress tracking.">
+<meta property="og:image" content="https://theiehub.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The IE Hub: industrial engineering, learned and built in the open.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -370,7 +379,7 @@
 <a class="skip" href="#main">Skip to content</a>
 <div class="progress" id="progress" aria-hidden="true"></div>
 <header class="topbar">
-  __LOGO:homeLink__
+  __LOGO__
   <span class="path"><span class="dot">~</span>/<b id="pathName">catalog</b></span>
   <div class="toggle" role="tablist" aria-label="View">
     <button type="button" class="btn" role="tab" id="tab-catalog" data-tab="catalog" aria-selected="true" aria-controls="view-catalog">Catalog</button>
@@ -1008,7 +1017,6 @@
   applyHash();
   window.addEventListener('pageshow', e => { if (!e.persisted) return; try { done = new Set(JSON.parse(localStorage.getItem('iekb-done') || '[]')); doneMods = new Set(JSON.parse(localStorage.getItem('iekb-mods') || '[]')); } catch (e2) {} refresh(); });
   window.addEventListener('hashchange', applyHash);
-  document.getElementById('homeLink').addEventListener('click', e => { e.preventDefault(); showTab('catalog'); open(null); history.replaceState(null, '', location.pathname); document.querySelector('.view.active').scrollTo(0, 0); });
 })();
 </script>
 </body>

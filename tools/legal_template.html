@@ -3,12 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>__TITLE__ · The IE Hub</title>
+<title>__TITLE__</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="favicon-16.png" type="image/png" sizes="16x16">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="description" content="__TITLE__ for The IE Hub.">
+<meta name="description" content="__DESC__">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The IE Hub">
+<meta property="og:title" content="__TITLE__">
+<meta property="og:description" content="__DESC__">
+<meta property="og:image" content="https://theiehub.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The IE Hub: industrial engineering, learned and built in the open.">
+<meta name="twitter:card" content="summary_large_image">
+__HEAD_SCRIPT__
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -142,22 +152,56 @@
   .ft-bottom { display: flex; flex-wrap: wrap; gap: 4px var(--s5); border-top: 1px solid var(--line); padding: var(--s4) 0 var(--s5); font-family: var(--mono); font-size: 12px; }
   .ft-bottom .ft-domain { margin-left: auto; }
   @media (max-width: 900px) { .ft-wrap { padding: 0 var(--s4); } .ft-top { grid-template-columns: 1fr 1fr; gap: var(--s5); padding-top: var(--s6); } .ft-brand { grid-column: 1 / -1; } }
+
+  /* Hub home (public/index.html): main.wide and the hp- classes */
+  main.wide { max-width: 1120px; padding-top: 0; font-size: 16px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--bg); box-shadow: none; } .btn.primary:hover { filter: brightness(1.08); background: var(--accent); }
+  .hp-hero { text-align: center; padding: var(--s8) 0 var(--s6); }
+  .hp-eyebrow { font-family: var(--mono); font-size: 12.5px; letter-spacing: .04em; color: var(--accent); margin-bottom: var(--s4); }
+  .hp-hero h1 { font-size: clamp(34px, 5.4vw, 58px); line-height: 1.06; margin: 0 auto; }
+  .hp-hero h1 em { font-style: normal; color: var(--accent); }
+  .hp-lede { color: var(--muted); font-size: 17px; margin: var(--s4) auto 0; text-wrap: balance; }
+  .hp-ctas { display: flex; gap: var(--s3); justify-content: center; flex-wrap: wrap; margin-top: var(--s5); }
+  .hp-ctas .btn { text-decoration: none; }
+  .hp-stats { display: flex; gap: var(--s6); justify-content: center; flex-wrap: wrap; margin-top: var(--s6); }
+  .hp-stats b { display: block; font-family: var(--display); font-size: 28px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .hp-stats small { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .hp-pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s3); }
+  .hp-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: var(--s4); box-shadow: var(--shadow-1); display: flex; flex-direction: column; gap: var(--s2); }
+  .hp-card h3 { margin: 0; font-size: 17px; } .hp-card h3::before { content: none; }
+  .hp-card p { color: var(--muted); font-size: 14px; flex: 1; margin: 0; }
+  .hp-go { font-family: var(--mono); font-size: 12.5px; text-decoration: none; } .hp-go:hover { text-decoration: underline; }
+  .hp-tag { align-self: flex-start; font-family: var(--mono); font-size: 11.5px; padding: 1px 7px; border-radius: 4px; border: 1px solid var(--line-strong); color: var(--muted); }
+  .hp-tag.live { color: var(--green); border-color: var(--green); background: var(--green-soft); } .hp-tag.soon { border-style: dashed; }
+  .hp-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: var(--s4); }
+  .hp-lbl { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+  .hp-chip { font-family: var(--mono); font-size: 12px; padding: 3px 10px; border-radius: 99px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); text-decoration: none; }
+  .hp-chip:hover { border-color: var(--accent); color: var(--accent); }
+  .hp-intro { color: var(--muted); margin-bottom: var(--s4); }
+  .hp-map { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--s5); align-items: center; }
+  .hp-map img { width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); display: block; }
+  .hp-map ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--s2); color: var(--muted); font-size: 14.5px; margin: 0; }
+  .hp-map li { margin: 0; } .hp-map li b { color: var(--text); font-weight: 600; }
+  .hp-maint { margin-top: var(--s7); padding: var(--s4); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 8px; background: var(--surface); }
+  .hp-maint p { color: var(--muted); font-size: 14.5px; margin: 0; } .hp-maint b { color: var(--text); }
+  @media (max-width: 900px) { .hp-pillars { grid-template-columns: 1fr 1fr; } .hp-map { grid-template-columns: 1fr; } }
+  @media (max-width: 520px) { .hp-pillars { grid-template-columns: 1fr; } .hp-hero { padding-top: var(--s7); } }
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <div class="topbar">
   __LOGO__
-  <span class="path"><span class="dot">~</span>/<b>__KEY__.html</b></span>
+  <span class="path"><span class="dot">~</span>/<b>__PATH__</b></span>
   <nav class="toggle" aria-label="Site views">
-    <a class="btn" href="index.html">Catalog</a>
-    <a class="btn" href="index.html#tab=path">Learning path</a>
-    <a class="btn" href="index.html#tab=graph">Mind map</a>
+    <a class="btn" href="learn.html">Catalog</a>
+    <a class="btn" href="learn.html#tab=path">Learning path</a>
+    <a class="btn" href="learn.html#tab=graph">Mind map</a>
   </nav>
   <span class="spacer"></span>
   <button type="button" class="btn icon" id="btnTheme" aria-label="Toggle light or dark theme" title="Theme">__ICON:circle-half:15__</button>
 </div>
-<main id="main">
+<main id="main"__MAIN_ATTR__>
 __BODY__
 </main>
 __FOOTER__

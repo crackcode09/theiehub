@@ -1,29 +1,34 @@
 {
-  "_about": "The IE Hub's pillars and the site roadmap. The footer and public/roadmap.html are built from this file (the home page will be too). Pillar status: live, soon or planned; only live pillars become links. Phase status: done, next, along (in progress alongside the others), planned or later. Updates list only what visitors notice: no hosting or repository details. __COURSES__, __MODULES__, __VERIFIED__, __COVERED__, __TOTAL__ and __OPEN__ are filled in from the courses at build time.",
+  "_about": "The IE Hub's pillars and the site roadmap. The footer and public/roadmap.html are built from this file and so is the home page (public/index.html). Pillar status: live, soon or planned; only live pillars become links. Phase status: done, next, along (in progress alongside the others), planned or later. Updates list only what visitors notice: no hosting or repository details. __COURSES__, __MODULES__, __VERIFIED__, __COVERED__, __TOTAL__ and __OPEN__ are filled in from the courses at build time. start: course slugs shown as start-here links on the home page.",
   "pillars": [
     {
       "key": "learn",
       "name": "Learn",
       "status": "live",
-      "href": "index.html"
+      "href": "learn.html",
+      "blurb": "Open courses with datasets you can rerun, a learning path by role and a mind map of the field.",
+      "cta": "Browse the catalog"
     },
     {
       "key": "projects",
       "name": "Projects",
       "status": "soon",
-      "href": "projects.html"
+      "href": "projects.html",
+      "blurb": "Worked cases from the courses, followed from problem to result, with simulated data you can rerun."
     },
     {
       "key": "insights",
       "name": "Insights",
       "status": "soon",
-      "href": "insights.html"
+      "href": "insights.html",
+      "blurb": "Plain-language notes: how a problem was solved, a research paper explained, a tool reviewed."
     },
     {
       "key": "collaborate",
       "name": "Collaborate",
       "status": "soon",
-      "href": "collaborate.html"
+      "href": "collaborate.html",
+      "blurb": "Review a course, propose one of the open topics, or start a project together."
     }
   ],
   "updated": "2026-11-01",
@@ -46,8 +51,8 @@
       "pillars": [
         "hub"
       ],
-      "status": "next",
-      "body": "The hub page at the site root with the map of the field; the catalog, learning path and mind map move to /learn; a new footer; this roadmap.",
+      "status": "done",
+      "body": "The hub page at the site root with the map of the field; the catalog, learning path and mind map at /learn; a new footer; this roadmap.",
       "items": []
     },
     {
@@ -68,7 +73,7 @@
         "projects",
         "collaborate"
       ],
-      "status": "planned",
+      "status": "next",
       "body": "Worked projects from the course case companies, problem to result. A Collaborate page: review a course, propose one of the __OPEN__ open topics, start a project, through GitHub Discussions.",
       "items": []
     },
@@ -113,6 +118,11 @@
     {
       "date": "2026-11-01",
       "pillar": "hub",
+      "text": "A new home page for the hub; the catalog, learning path and mind map move to <a href=\"learn.html\">/learn</a>, and old links still work."
+    },
+    {
+      "date": "2026-11-01",
+      "pillar": "hub",
       "text": "The site is now at theiehub.com."
     },
     {
@@ -120,5 +130,11 @@
       "pillar": "hub",
       "text": "The IE Hub name and logo adopted."
     }
+  ],
+  "start": [
+    "introduction-to-industrial-engineering",
+    "process-mapping",
+    "measurement-and-basic-statistics",
+    "voice-of-the-customer"
   ]
 }

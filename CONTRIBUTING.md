@@ -49,5 +49,5 @@ main   what is published at theiehub.com (Cloudflare Pages builds from it)
 
 - Open every pull request against `dev`, one independent change per branch. Branches are deleted automatically when merged.
 - A release is a pull request from `dev` to `main`, merged with a merge commit so `dev` stays an ancestor of `main`.
-- Before merging a release, check the `dev` preview (private: it sits behind Cloudflare Access and only the maintainer can open it): the catalog, a course with a figure, the mind map and the privacy page. Only `main` and `dev` get Cloudflare builds; feature branches do not.
+- Before merging a release, check the `dev` preview (private: it sits behind Cloudflare Access and only the maintainer can open it): the home page, the catalog at `/learn`, a course with a figure, the mind map, the roadmap and the privacy page. Only `main` and `dev` get Cloudflare builds; feature branches do not.
 - `main` and `dev` are protected: no direct pushes, no force pushes, no deletion, and every change arrives by pull request. The rules apply to maintainers too.
