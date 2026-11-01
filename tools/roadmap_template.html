@@ -94,8 +94,7 @@
   .search:focus-within kbd { display: none; }
   .chip button { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; } .chip button:hover { text-decoration: underline; }
   .chip[hidden] { display: none; }
-  footer { flex: none; border-top: 1px solid var(--line); padding: var(--s5); text-align: center; font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
-  footer .frow { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 18px; line-height: 1.8; } footer .frow + .frow { margin-top: 4px; } footer .frow.muted { opacity: .8; } footer a { color: var(--muted); text-decoration: none; } footer a:hover { color: var(--accent); text-decoration: underline; }
+  footer.ft { flex: none; }
   #search-toggle { display: none; }
 
   main { flex: 1; position: relative; min-height: 0; overflow: hidden; }
@@ -348,6 +347,23 @@
     main, .view { position: static; overflow: visible; } .view:not(.active) { display: none !important; } .page { padding: 0; }
     a { color: inherit; } .cat, .mods .crow { break-inside: avoid; }
   }
+
+  /* Footer (shared; markup from footer_html() in tools/roadmap_graph.py, links from tools/hub.json) */
+  footer.ft { border-top: 1px solid var(--line); background: var(--bg); color: var(--muted); font-family: var(--sans); font-size: 14px; line-height: 1.5; text-align: left; }
+  .ft a { color: var(--muted); text-decoration: none; } .ft a:hover { color: var(--text); }
+  .ft-wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--s7); }
+  .ft-top { display: grid; grid-template-columns: minmax(240px, 1.4fr) repeat(4, minmax(120px, 1fr)); gap: var(--s6); padding: var(--s7) 0 var(--s6); }
+  .ft-home { display: inline-block; } .ft-logo { display: block; }
+  .ft-brand p { margin: var(--s4) 0 0; line-height: 1.55; } .ft-brand .ft-by { margin-top: var(--s3); font-size: 13px; }
+  .ft-brand .ft-by a { color: var(--text); border-bottom: 1px solid var(--line-strong); } .ft-brand .ft-by a:hover { border-color: var(--accent); }
+  .ft-h { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--text); margin: 0 0 var(--s3); }
+  .ft-col ul { list-style: none; padding: 0; margin: 0; } .ft-col li { margin: 0 0 var(--s2); }
+  .ft-col .bi { vertical-align: -2px; margin-right: 6px; }
+  .ft .soon { color: var(--muted); cursor: default; }
+  .ft .soon i { font-style: normal; font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; border: 1px dashed var(--line-strong); border-radius: 4px; padding: 0 5px; margin-left: 6px; vertical-align: 1px; }
+  .ft-bottom { display: flex; flex-wrap: wrap; gap: 4px var(--s5); border-top: 1px solid var(--line); padding: var(--s4) 0 var(--s5); font-family: var(--mono); font-size: 12px; }
+  .ft-bottom .ft-domain { margin-left: auto; }
+  @media (max-width: 900px) { .ft-wrap { padding: 0 var(--s4); } .ft-top { grid-template-columns: 1fr 1fr; gap: var(--s5); padding-top: var(--s6); } .ft-brand { grid-column: 1 / -1; } }
 </style>
 </head>
 <body>
@@ -403,7 +419,7 @@
     </div>
     <h2 class="sec browse">browse by category</h2>
     <div id="catalog"></div>
-  </div><footer><div class="frow"><a href="index.html">catalog</a><a href="roadmap.html">site roadmap</a><a href="sources.html">sources</a><a href="https://github.com/crackcode09/theiehub/blob/main/NOTICE.md" rel="noopener">notice</a><a href="privacy.html">privacy</a><a href="terms.html">terms</a></div><div class="frow muted"><span>The IE Hub</span><span>by Nidhin</span><a href="https://github.com/crackcode09/theiehub" rel="noopener">__ICON:github:13__ GitHub</a><span>content CC BY 4.0</span><span>code MIT</span></div></footer></section>
+  </div>__FOOTER__</section>
   <section class="view" id="view-path" role="tabpanel" aria-labelledby="tab-path"><div class="page">
     <div class="pmode" role="group" aria-label="Learning path mode"><button type="button" data-pmode="track" aria-pressed="true">follow a track</button><button type="button" data-pmode="time" aria-pressed="false">fit my time</button></div>
     <div class="pane" id="pane-track">
@@ -414,7 +430,7 @@
       <p class="intro">How much time do you have? Everything here is open to you now; done courses are struck out.</p>
       <div id="budgetOut"></div>
     </div>
-  </div><footer><div class="frow"><a href="index.html">catalog</a><a href="roadmap.html">site roadmap</a><a href="sources.html">sources</a><a href="https://github.com/crackcode09/theiehub/blob/main/NOTICE.md" rel="noopener">notice</a><a href="privacy.html">privacy</a><a href="terms.html">terms</a></div><div class="frow muted"><span>The IE Hub</span><span>by Nidhin</span><a href="https://github.com/crackcode09/theiehub" rel="noopener">__ICON:github:13__ GitHub</a><span>content CC BY 4.0</span><span>code MIT</span></div></footer></section>
+  </div>__FOOTER__</section>
   <section class="view" id="view-graph" role="tabpanel" aria-labelledby="tab-graph">
     <svg id="graph" aria-label="Course mind map"></svg>
     <div class="graph-tools">
