@@ -134,4 +134,4 @@ Every course is written with AI assistance and is marked `draft` in the tables a
 
 ## License
 
-Content: CC BY 4.0. Code: MIT. See [LICENSE](LICENSE).
+Content (course text, data, figures, documentation): CC BY 4.0. Code (the `tools/` folders and the site code): MIT. The IE Hub name and logo are not covered by either licence. See [LICENSE](LICENSE) for exactly which files fall under which.
