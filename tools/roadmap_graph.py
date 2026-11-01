@@ -9,6 +9,7 @@ Re-run after editing ROADMAP.md or adding a course. Standard library only.
 import json
 import math
 import re
+import urllib.parse
 import sys
 from pathlib import Path
 
@@ -22,6 +23,7 @@ TEMPLATE = ROOT / "tools" / "roadmap_template.html"
 READER_OUT = PUBLIC / "course.html"
 READER_TEMPLATE = ROOT / "tools" / "reader_template.html"
 LEGAL_TEMPLATE = ROOT / "tools" / "legal_template.html"
+SITE = "https://theiehub.com"   # canonical origin; Cloudflare Pages serves /page.html at /page, so canonical URLs drop .html
 LEGAL_PAGES = {"privacy": "Privacy Policy", "terms": "Terms of Use", "roadmap": "Site roadmap", "sources": "Sources"}   # tools/legal/<key>.html -> public/<key>.html
 ICON_DIR = ROOT / "tools" / "icons"   # Bootstrap Icons (MIT), vendored; see tools/icons/LICENSE
 CATEGORY_ICONS = {
@@ -666,6 +668,32 @@ def fill(template_path, **slots):
     return tpl
 
 
+def canonical(html, path):
+    """Add <link rel="canonical"> after the title, so copies of a page (theiehub.pages.dev, /page.html) point to one URL."""
+    return html.replace("</title>", f'</title>\n<link rel="canonical" href="{SITE}/{path}">', 1)
+
+
+# The home page's WebSite structured data: how Google picks the site name it shows in results.
+# https://developers.google.com/search/docs/appearance/site-names
+SITE_NAME_LD = ('<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", '
+                f'"name": "The IE Hub", "alternateName": ["IE Hub", "theiehub.com"], "url": "{SITE}/"}}</script>\n')
+
+
+def write_seo(model):
+    """public/robots.txt and public/sitemap.xml: every page, every built course and every module. No lastmod, so the
+    files only change when pages are added or removed (and the CI check on public/ stays stable)."""
+    write(PUBLIC / "robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
+    urls = [f"{SITE}/", f"{SITE}/learn", f"{SITE}/roadmap", f"{SITE}/sources", f"{SITE}/privacy", f"{SITE}/terms"]
+    for c in (n for n in model["nodes"] if n["type"] == "course"):
+        slug, root = c["id"][7:], c["path"].rsplit("/", 1)[0]
+        urls.append(f"{SITE}/course?c={slug}")
+        urls += [f"{SITE}/course?c={slug}&amp;f={urllib.parse.quote(m['path'][len(root) + 1:], safe='')}"
+                 for m in model["nodes"] if m["type"] == "module" and m["parent"] == c["id"]]
+    write(PUBLIC / "sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+          + "".join(f"  <url><loc>{u}</loc></url>\n" for u in urls) + "</urlset>\n")
+    return len(urls)
+
+
 def lint_templates():
     """Checkpoint: content inside a page column keeps one width. No rule may narrow the text
     (max-width on a descendant of .doc, .page or main) while tables and figures keep the column,
@@ -729,7 +757,7 @@ def write_html(cats):
     lint_templates()
     model = build_model(cats)
     enc = lambda m: json.dumps(m, ensure_ascii=False).replace("</", "<\\/").replace("<!--", "<\\!--")
-    write(HTML_OUT, fill(TEMPLATE, DATA=enc(model)))
+    write(HTML_OUT, canonical(fill(TEMPLATE, DATA=enc(model)), "learn"))
     # The reader parses this on every page open, so it carries only what the reader reads: courses, modules and categories, no topics or links.
     keep = ("id", "type", "parent", "path", "label", "note", "tcount", "tkind", "extras", "length", "verified", "review")
     slim = {"repo": model["repo"], "nodes": [{k: n[k] for k in keep if k in n} for n in model["nodes"] if n["type"] in ("course", "module", "category")]}
@@ -745,15 +773,15 @@ def write_html(cats):
                     body = body.replace(f"__{k}__", v)
             body = inject_icons(body)
         body = fill_counts(body, model)
-        write(PUBLIC / f"{key}.html", fill(LEGAL_TEMPLATE, TITLE=f"{title} · The IE Hub", DESC=f"{title} for The IE Hub, free and open industrial engineering courses.",
-                                           PATH=f"{key}.html", NAV=hubnav_html("roadmap" if key == "roadmap" else ""), MAIN_ATTR="", HEAD_SCRIPT="", BODY=body))
+        write(PUBLIC / f"{key}.html", canonical(fill(LEGAL_TEMPLATE, TITLE=f"{title} · The IE Hub", DESC=f"{title} for The IE Hub, free and open industrial engineering courses.",
+                                           PATH=f"{key}.html", NAV=hubnav_html("roadmap" if key == "roadmap" else ""), MAIN_ATTR="", HEAD_SCRIPT="", BODY=body), key))
     # The hub home. Old catalog links (/#course:…, /#tab=…, /index.html#…) carry a fragment the server never sees,
     # so a script in the head forwards any fragment that is not one of this page's own anchors to learn.html.
     forward = ("<script>(function () { const h = location.hash.slice(1); "
                "if (h && !['main', 'hero', 'why', 'pillars', 'audiences', 'where'].includes(h)) location.replace('learn.html' + location.hash); })();</script>")
-    write(HUB_OUT, fill(LEGAL_TEMPLATE, TITLE="The IE Hub · industrial engineering, learned and built in the open",
+    write(HUB_OUT, canonical(fill(LEGAL_TEMPLATE, TITLE="The IE Hub · industrial engineering, learned and built in the open",
                         DESC="Free, open industrial engineering: original courses with data you can rerun, a learning path, a mind map of the field, and worked projects and insights on the way.",
-                        PATH="", NAV=hubnav_html(), MAIN_ATTR=' class="wide"', HEAD_SCRIPT=forward, BODY=fill_counts(inject_icons(hub_page(model)), model)))
+                        PATH="", NAV=hubnav_html(), MAIN_ATTR=' class="wide"', HEAD_SCRIPT=SITE_NAME_LD + forward, BODY=fill_counts(inject_icons(hub_page(model)), model)), ""))
     return model
 
 
@@ -764,6 +792,7 @@ if __name__ == "__main__":
     print(f"wrote {OUT.relative_to(ROOT)}: {sum(len(c['items']) for c in cats)} courses in {len(cats)} categories")
     model = write_html(cats)
     print(f"wrote {READER_OUT.relative_to(ROOT)} and {HUB_OUT.relative_to(ROOT)}")
+    print(f"wrote public/robots.txt and public/sitemap.xml: {write_seo(model)} URLs")
     kinds, edges = {}, {}
     for n in model["nodes"]:
         kinds[n["type"]] = kinds.get(n["type"], 0) + 1
