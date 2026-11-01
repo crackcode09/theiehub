@@ -9,6 +9,15 @@
 <link rel="icon" href="favicon-16.png" type="image/png" sizes="16x16">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="description" content="Read an IE Knowledgebase course or module.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The IE Hub">
+<meta property="og:title" content="The IE Hub · course reader">
+<meta property="og:description" content="Read an open industrial engineering course or module on The IE Hub.">
+<meta property="og:image" content="https://theiehub.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The IE Hub: industrial engineering, learned and built in the open.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -51,10 +60,8 @@
   .notice { margin: 0 0 var(--s5); padding: var(--s3) var(--s4); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 8px; background: var(--surface); font-size: 13px; color: var(--muted); }
   .notice b { color: var(--text); font-weight: 600; } .notice[hidden] { display: none; }
   .notice.verified { border-left-color: var(--green); }
-  footer a { color: inherit; } footer a:hover { color: var(--accent); }
   @media print { .notice { border: 1px solid #999; } }
   .topbar .status { margin: 0; }
-  nav.toggle a.btn { color: var(--text); } nav.toggle a.btn:hover { color: var(--accent); text-decoration: none; }
   .btn { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 12.5px; color: var(--text); background: var(--surface); border: 1px solid var(--line);
     border-radius: 6px; padding: 6px 12px; cursor: pointer; text-decoration: none; transition: border-color .15s, background .15s, transform .08s var(--ease-out); }
   .btn:active { transform: scale(.96); }
@@ -156,16 +163,10 @@
   .pager-row .btn.prev { grid-column: 1; justify-self: start; } .pager-row .btn.mark { grid-column: 2; justify-self: center; } .pager-row .btn.next { grid-column: 3; justify-self: end; }
   .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--bg); box-shadow: none; } .btn.primary:hover { background: var(--accent); color: var(--bg); filter: brightness(1.08); }
   .btn[aria-disabled="true"] { opacity: .45; cursor: default; box-shadow: none; pointer-events: none; }
-  footer { border-top: 1px solid var(--line); padding: var(--s5); text-align: center; font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
   .toc-toggle { display: none; }
-  footer .frow { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 18px; line-height: 1.8; } footer .frow + .frow { margin-top: 4px; } footer .frow.muted { opacity: .8; } footer a { color: var(--muted); text-decoration: none; } footer a:hover { color: var(--accent); text-decoration: underline; }
   @media (max-width: 700px) {
     .topbar { padding: 8px var(--s3); gap: 8px; -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--bg); } .topbar .path { flex: 1; }
-    .topbar nav.toggle { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: flex; padding: 6px var(--s3) calc(6px + env(safe-area-inset-bottom));
-      background: rgba(var(--bg-rgb), .96); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-top: 1px solid var(--line); }
-    .topbar nav.toggle .btn { flex: 1; justify-content: center; min-height: 44px; padding: 10px 4px; border-radius: 8px; border-left: 1px solid var(--line-strong); }
-    .topbar nav.toggle .btn + .btn { margin-left: 6px; }
-    body { padding-bottom: 60px; }
+
   }
   @media (max-width: 820px) {
     .toc-toggle { display: flex; width: 100%; justify-content: space-between; align-items: center; margin-bottom: var(--s2); }
@@ -184,6 +185,32 @@
     .doc details:not(.viewmenu) { border: 0; padding: 0; } .doc details:not(.viewmenu) summary { display: none; } .doc details:not(.viewmenu) > * { display: block; }
     a { color: #000; text-decoration: none; } .doc a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 10px; color: #444; }
   }
+
+  /* Footer (shared; markup from footer_html() in tools/roadmap_graph.py, links from tools/hub.json) */
+  footer.ft { border-top: 1px solid var(--line); background: var(--bg); color: var(--muted); font-family: var(--sans); font-size: 14px; line-height: 1.5; text-align: left; }
+  .ft a { color: var(--muted); text-decoration: none; } .ft a:hover { color: var(--text); }
+  .ft-wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--s7); }
+  .ft-top { display: grid; grid-template-columns: minmax(240px, 1.4fr) repeat(4, minmax(120px, 1fr)); gap: var(--s6); padding: var(--s7) 0 var(--s6); }
+  .ft-home { display: inline-block; } .ft-logo { display: block; }
+  .ft-brand p { margin: var(--s4) 0 0; line-height: 1.55; } .ft-brand .ft-by { margin-top: var(--s3); font-size: 13px; }
+  .ft-brand .ft-by a { color: var(--text); border-bottom: 1px solid var(--line-strong); } .ft-brand .ft-by a:hover { border-color: var(--accent); }
+  .ft-h { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--text); margin: 0 0 var(--s3); }
+  .ft-col ul { list-style: none; padding: 0; margin: 0; } .ft-col li { margin: 0 0 var(--s2); }
+  .ft-col .bi { vertical-align: -2px; margin-right: 6px; }
+  .ft .soon { color: var(--muted); cursor: default; }
+  .ft .soon i { font-style: normal; font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; border: 1px dashed var(--line-strong); border-radius: 4px; padding: 0 5px; margin-left: 6px; vertical-align: 1px; }
+  .ft-bottom { display: flex; flex-wrap: wrap; gap: 4px var(--s5); border-top: 1px solid var(--line); padding: var(--s4) 0 var(--s5); font-family: var(--mono); font-size: 12px; }
+  .ft-bottom .ft-domain { margin-left: auto; }
+  @media (max-width: 900px) { .ft-wrap { padding: 0 var(--s4); } .ft-top { grid-template-columns: 1fr 1fr; gap: var(--s5); padding-top: var(--s6); } .ft-brand { grid-column: 1 / -1; } }
+
+  /* Hub navigation in the top bar (markup from hubnav_html() in tools/roadmap_graph.py, from tools/hub.json) */
+  .hubnav { display: flex; align-items: center; gap: 2px; font-family: var(--mono); font-size: 13px; margin-left: var(--s2); }
+  .hubnav a { color: var(--muted); text-decoration: none; padding: 7px 12px; border-radius: 6px; line-height: 1.2; }
+  .hubnav a:hover { color: var(--text); background: var(--surface-2); text-decoration: none; }
+  .hubnav a[aria-current] { color: var(--text); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); }
+  .hubnav .soon { color: var(--muted); opacity: .55; padding: 7px 12px; cursor: default; }
+  @media (max-width: 860px) { .hubnav .soon { display: none; } }
+  @media (max-width: 700px) { .hubnav { margin-left: 0; } .hubnav a { padding: 7px 8px; } }
 </style>
 </head>
 <body>
@@ -192,11 +219,7 @@
 <div class="topbar">
   __LOGO__
   <span class="path"><span class="dot">~</span>/<span id="pathCourse"></span>/<b id="pathFile">README.md</b></span>
-  <nav class="toggle" aria-label="Site views">
-    <a class="btn" href="index.html">Catalog</a>
-    <a class="btn" href="index.html#tab=path">Learning path</a>
-    <a class="btn" href="index.html#tab=graph">Mind map</a>
-  </nav>
+  __HUBNAV:learn__
   <span class="spacer"></span>
   <button type="button" class="btn icon" id="btnTheme" aria-label="Toggle light or dark theme" title="Theme">__ICON:circle-half:15__</button>
 </div>
@@ -226,7 +249,7 @@
     <div class="pager" id="pager"></div>
   </main>
 </div>
-<footer><div class="frow"><a href="index.html">catalog</a><a href="roadmap.html">site roadmap</a><a href="sources.html">sources</a><a href="https://github.com/crackcode09/theiehub/blob/main/NOTICE.md" rel="noopener">notice</a><a href="privacy.html">privacy</a><a href="terms.html">terms</a></div><div class="frow muted"><span>The IE Hub</span><span>by Nidhin</span><a href="https://github.com/crackcode09/theiehub" rel="noopener">__ICON:github:13__ GitHub</a><span>content CC BY 4.0</span><span>code MIT</span></div></footer>
+__FOOTER__
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js" integrity="sha512-xeUh+KxNyTufZOje++oQHstlMQ8/rpyzPuM+gjMFYK3z5ILJGE7l2NvYL+XfliKURMpBIKKp1XoPN/qswlSMFA==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js" integrity="sha512-jB0TkTBeQC9ZSkBqDhdmfTv1qdfbWpGE72yJ/01Srq6hEzZIz2xkz1e57p9ai7IeHMwEG7HpzG6NdptChif5Pg==" crossorigin="anonymous"></script>
 <script id="data" type="application/json">__DATA__</script>
@@ -260,7 +283,7 @@
   const course = courses.find(c => c.id === 'course:' + (params.get('c') || ''));
   if (!course) {
     $('title').textContent = 'Course not found';
-    $('status').hidden = false; $('status').innerHTML = `No course called <b>${esc(params.get('c') || '')}</b>. <a href="index.html">Back to the catalog</a>.`;
+    $('status').hidden = false; $('status').innerHTML = `No course called <b>${esc(params.get('c') || '')}</b>. <a href="learn.html">Back to the catalog</a>.`;
     return;
   }
   const slug = course.id.slice(7), slugQ = encodeURIComponent(slug);
@@ -277,7 +300,7 @@
   // ---- site status and back link
 
   // ---- hero and nav
-  $('pathCourse').innerHTML = `<a href="index.html#course:${esc(slug)}">${esc(slug)}</a>`;
+  $('pathCourse').innerHTML = `<a href="learn.html#course:${esc(slug)}">${esc(slug)}</a>`;
   let docLines = 0;
   function setFile(f) {
     file = f; isReadme = file === 'README.md'; docLines = 0;

@@ -29,6 +29,8 @@ No topic bullet list under the title: the sessions table already lists the topic
 
 ## Site templates
 
+One footer: every page's footer comes from `footer_html()` in `tools/roadmap_graph.py`, placed with `__FOOTER__` in each template; edit it there, never in a page. The hub's pillars and their status (`live`, `soon`, `planned`) are in `tools/hub.json`; a pillar becomes a footer link only when it is `live`. The site roadmap (`public/roadmap.html`) is built from the same file: its phases, their status, the goal and the recent updates. When a phase moves, change its `status` and add a line to `updates` (only what visitors notice; no hosting or repository details), and bump `updated`.
+
 One width per column: inside the reader document, the catalog page and the legal pages, prose, tables, code and figures share the same right edge. Set the width once on the column (`.doc`, `.page`, `main`) and never on the text inside it; `python tools/roadmap_graph.py` refuses to build if a rule narrows content inside a column.
 
 ## Workflow
@@ -47,5 +49,5 @@ main   what is published at theiehub.com (Cloudflare Pages builds from it)
 
 - Open every pull request against `dev`, one independent change per branch. Branches are deleted automatically when merged.
 - A release is a pull request from `dev` to `main`, merged with a merge commit so `dev` stays an ancestor of `main`.
-- Before merging a release, check the `dev` preview (private: it sits behind Cloudflare Access and only the maintainer can open it): the catalog, a course with a figure, the mind map and the privacy page. Only `main` and `dev` get Cloudflare builds; feature branches do not.
+- Before merging a release, check the `dev` preview (private: it sits behind Cloudflare Access and only the maintainer can open it): the home page, the catalog at `/learn`, a course with a figure, the mind map, the roadmap and the privacy page. Only `main` and `dev` get Cloudflare builds; feature branches do not.
 - `main` and `dev` are protected: no direct pushes, no force pushes, no deletion, and every change arrives by pull request. The rules apply to maintainers too.

@@ -1,5 +1,6 @@
 """Draw ROADMAP.md as a radial knowledge graph (roadmap.svg) and build the
-interactive site (public/index.html, public/course.html) from the roadmap and course READMEs.
+interactive site (public/index.html the hub home, public/learn.html the catalog, public/course.html the reader)
+from the roadmap, the course READMEs and tools/hub.json.
 The site lives in public/ and reads courses/ beside it; tools/build_site.py assembles both for hosting.
 
 Usage:  python tools/roadmap_graph.py
@@ -15,7 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "ROADMAP.md"
 PUBLIC = ROOT / "public"
 OUT = PUBLIC / "roadmap.svg"
-HTML_OUT = PUBLIC / "index.html"
+HTML_OUT = PUBLIC / "learn.html"
+HUB_OUT = PUBLIC / "index.html"
 TEMPLATE = ROOT / "tools" / "roadmap_template.html"
 READER_OUT = PUBLIC / "course.html"
 READER_TEMPLATE = ROOT / "tools" / "reader_template.html"
@@ -46,6 +48,8 @@ def icon(name, size=16):
 
 
 LOGO = ROOT / "tools" / "logo" / "header.svg.html"
+HUB_DATA = ROOT / "tools" / "hub.json"
+NIDHY = "https://nidhy.dev"
 
 
 def inject_logo(html):
@@ -54,6 +58,167 @@ def inject_logo(html):
     snippet = LOGO.read_text(encoding="utf-8").strip()
     return re.sub(r"__LOGO(?::([A-Za-z][A-Za-z0-9]*))?__",
                   lambda m: snippet.replace("__LOGO_ATTRS__", f' id="{m.group(1)}"' if m.group(1) else ""), html)
+
+
+def footer_html():
+    """The site footer, the same on every page: brand block, then Learn, The hub, About and Legal columns, then the
+    licences. Hub pillars come from tools/hub.json: a live pillar is a link, any other shows as "soon" without one."""
+    hub = json.loads(HUB_DATA.read_text(encoding="utf-8"))
+    full = re.search(r'<svg class="logo-full".*?</svg>', LOGO.read_text(encoding="utf-8"), re.S).group(0)
+    full = full.replace('class="logo-full"', 'class="ft-logo"').replace('width="120" height="27"', 'width="138" height="31"')
+    def col(title, items):
+        def li(t, h):
+            if h is None:
+                return f'<li><span class="soon">{t}<i>soon</i></span></li>'
+            rel = ' rel="noopener"' if h.startswith("http") else ""
+            return f'<li><a href="{h}"{rel}>{t}</a></li>'
+        lis = "".join(li(t, h) for t, h in items)
+        return f'<nav class="ft-col" aria-label="{title}"><p class="ft-h">{title}</p><ul>{lis}</ul></nav>'
+    learn = [("Catalog", "learn.html"), ("Learning path", "learn.html#tab=path"), ("Mind map", "learn.html#tab=graph"),
+             ("Course coverage", f"{REPO_URL}/blob/main/ROADMAP.md")]
+    hubcol = [(p["name"], p["href"] if p["status"] == "live" else None) for p in hub["pillars"] if p["key"] != "learn"]
+    about = [("Site roadmap", "roadmap.html"), ("Sources", "sources.html"), ("__ICON:github:14__GitHub", REPO_URL),
+             ("Report an issue", f"{REPO_URL}/issues")]
+    legal = [("Notice", f"{REPO_URL}/blob/main/NOTICE.md"), ("Privacy", "privacy.html"), ("Terms", "terms.html")]
+    return ('<footer class="ft"><div class="ft-wrap"><div class="ft-top">'
+            f'<div class="ft-brand"><a class="ft-home" href="index.html" aria-label="The IE Hub, home">{full}</a>'
+            '<p>Industrial engineering, learned and built in the open. Free courses, worked projects and data you can rerun.</p>'
+            f'<p class="ft-by">Maintained by <a href="{NIDHY}" rel="noopener">Nidhin Dileepkumar</a></p></div>'
+            + col("Learn", learn) + col("The hub", hubcol) + col("About", about) + col("Legal", legal) +
+            '</div><div class="ft-bottom"><span>Content CC BY 4.0</span><span>Code MIT</span><span class="ft-domain">theiehub.com</span></div></div></footer>')
+
+
+STATUS_LABEL = {"done": "done", "next": "next", "along": "in progress", "planned": "planned", "later": "later"}
+PILLAR_NAME = {"hub": "Hub", "learn": "Learn", "projects": "Projects", "insights": "Insights", "collaborate": "Collaborate"}
+
+
+def roadmap_parts():
+    """The generated pieces of public/roadmap.html, all from tools/hub.json: the date, the goal, the summary numbers,
+    the phase bar, the pillar filter, the phase timeline and the recent updates. Course counts stay as __COURSES__ etc.
+    placeholders here; write_html fills them in with the rest of the page."""
+    hub = json.loads(HUB_DATA.read_text(encoding="utf-8"))
+    phases = hub["phases"]
+    done = sum(1 for p in phases if p["status"] == "done")
+    seg = {"done": "done", "next": "active", "along": "active"}
+    bar = "".join(f'<i class="{seg.get(p["status"], "")}"></i>' for p in phases)
+    keys = []
+    for p in phases:
+        keys += [k for k in p["pillars"] if k not in keys]
+    filt = '<button type="button" aria-pressed="true" data-f="">all</button>' + "".join(
+        f'<button type="button" aria-pressed="false" data-f="{k}">{k}</button>' for k in PILLAR_NAME if k in keys)
+    lis = []
+    for i, p in enumerate(phases, 1):
+        cls = {"done": "done", "next": "active", "along": "along"}.get(p["status"], "later")
+        open_ = p["status"] == "next"
+        pill = " · ".join(PILLAR_NAME[k] for k in p["pillars"])
+        items = ("<ul>" + "".join(f"<li>{x}</li>" for x in p["items"]) + "</ul>") if p["items"] else ""
+        lis.append(f'<li class="{cls}" id="phase-{i}" data-p="{" ".join(p["pillars"])}">'
+                   f'<button type="button" class="tl-head" aria-expanded="{str(open_).lower()}" aria-controls="phase-{i}-body">'
+                   f'<span class="tl-dot"></span><span class="tl-n">{i}</span><span class="tl-title">{p["title"]}</span>'
+                   f'<span class="tl-pill">{pill}</span><span class="tl-status">{STATUS_LABEL[p["status"]]}</span>__ICON:chevron-right:14__</button>'
+                   f'<div class="tl-body" id="phase-{i}-body"{"" if open_ else " hidden"}><p>{p["body"]}</p>{items}</div></li>')
+    upd = "".join(f'<li><time datetime="{u["date"]}">{u["date"]}</time><div><span class="tag">{u["pillar"]}</span>{u["text"]}</div></li>'
+                  for u in hub["updates"])
+    return {"RM_UPDATED": hub["updated"], "RM_GOAL": hub["goal"], "RM_DONE": str(done), "RM_PHASES": str(len(phases)),
+            "RM_BAR": bar, "RM_FILTER": filt, "RM_TIMELINE": "".join(lis), "RM_UPDATES": upd}
+
+
+# The home page hero: the same title, map lines, search and animation as the old catalog front door.
+HUB_HERO = """<section class="hero" id="hero">
+  <svg class="bgmap" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="var(--accent)" stroke-width="1.2"><path d="M500 150 C380 150 380 60 260 60"/><path d="M500 150 C380 150 380 150 260 150"/><path d="M500 150 C380 150 380 240 260 240"/><path d="M500 150 C620 150 620 40 740 40"/><path d="M500 150 C620 150 620 120 740 120"/><path d="M500 150 C620 150 620 200 740 200"/><path d="M500 150 C620 150 620 270 740 270"/><path d="M260 60 C200 60 200 30 140 30"/><path d="M260 60 C200 60 200 90 140 90"/><path d="M260 150 C200 150 200 130 140 130"/><path d="M260 150 C200 150 200 175 140 175"/><path d="M260 240 C200 240 200 225 140 225"/><path d="M740 120 C800 120 800 100 860 100"/><path d="M740 120 C800 120 800 145 860 145"/><path d="M740 200 C800 200 800 185 860 185"/><path d="M740 200 C800 200 800 220 860 220"/></g>
+    <g fill="var(--accent)"><circle cx="500" cy="150" r="16"/><circle cx="260" cy="60" r="6"/><circle cx="260" cy="150" r="6"/><circle cx="260" cy="240" r="6"/><circle cx="740" cy="40" r="6"/><circle cx="740" cy="120" r="6"/><circle cx="740" cy="200" r="6"/><circle cx="740" cy="270" r="6"/></g>
+    <g fill="var(--green)"><circle cx="140" cy="30" r="4"/><circle cx="140" cy="90" r="4"/><circle cx="140" cy="130" r="4"/><circle cx="140" cy="175" r="4"/><circle cx="140" cy="225" r="4"/><circle cx="860" cy="100" r="4"/><circle cx="860" cy="145" r="4"/><circle cx="860" cy="185" r="4"/><circle cx="860" cy="220" r="4"/></g>
+  </svg>
+  <div class="hero-in">
+    <div class="eyebrow">free · open · original · reviewable</div>
+    <h1 aria-label="The IE Hub"><span class="type" aria-hidden="true"><span class="ghost">The IE <span class="md">Hub</span></span><span class="live"><span id="tyA">The IE </span><span class="md" id="tyB">Hub</span><span class="cursor"></span></span></span></h1>
+    <p class="lede">Industrial engineering, learned and built in the open.</p>
+    <form class="ask" id="ask" role="search">
+      <input type="search" id="askInput" placeholder="What do you want to learn?" aria-label="Search courses and modules" autocomplete="off" spellcheck="false">
+      <button type="submit">search</button>
+    </form>
+    <div class="pop"><b>start here</b>__CHIPS__</div>
+    <div class="stats">
+      <div class="stat"><b class="num" data-n="__COURSES__">__COURSES__</b><small>courses</small></div>
+      <div class="stat"><b class="num" data-n="__MODULES__">__MODULES__</b><small>modules</small></div>
+      <div class="stat"><b>__COVERED__ / __TOTAL__</b><small>catalog topics</small></div>
+      <div class="stat"><b class="num" data-n="__VERIFIED__">__VERIFIED__</b><small>verified</small></div>
+    </div>
+    <div class="byline"><a class="stat link" href="roadmap.html">site roadmap →</a></div>
+    <p class="fine"><b>Preview release.</b> Every course is written with AI assistance and stays <span class="tag draft">draft</span> until a reviewer checks it against the <a href="https://github.com/crackcode09/theiehub/blob/main/REVIEW.md" rel="noopener">review checklist</a>. Only public IISE course titles and topic outlines were used as a map; no IISE material appears here (<a href="terms.html#originality">originality notice</a>). Progress is saved in this browser only.</p>
+  </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/4.5.0/anime.umd.min.js" integrity="sha512-dnhflec5WaXvpVYrt0oWfe0iUyWpjNiZbxkjrhNu9WAWWHLX7VqqyxCZHL7dWCrwj6lN+XGN9FtiWIBgX2b/PA==" crossorigin="anonymous"></script>
+<script>
+  (function () {
+    // the search opens the catalog with the query: /learn?q=...
+    document.getElementById('ask').addEventListener('submit', e => { e.preventDefault(); const q = document.getElementById('askInput').value.trim(); location.href = 'learn.html' + (q ? '?q=' + encodeURIComponent(q) : ''); });
+    const motion = typeof anime !== 'undefined' && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!motion) return;
+    try {   // decorative only: a library hiccup must never stop the page
+      anime.animate(anime.svg.createDrawable([...document.querySelectorAll('#hero .bgmap path')]), { draw: ['0 0', '0 1'], duration: 900, delay: anime.stagger(30), ease: 'outQuad' });
+      anime.animate('#hero .hero-in > *', { opacity: [0, 1], y: [10, 0], duration: 460, delay: anime.stagger(55), ease: 'outCubic' });
+      document.querySelectorAll('#hero .num').forEach(el => { const n = +el.dataset.n; if (!n) return; const o = { v: 0 }; anime.animate(o, { v: n, duration: 500, ease: 'outCubic', modifier: anime.utils.round(0), onUpdate: () => { el.textContent = o.v; } }); });
+      const full = 'The IE Hub', split = 7, tyA = document.getElementById('tyA'), tyB = document.getElementById('tyB'), ty = { n: full.length };
+      const showTy = () => { const k = Math.round(ty.n); tyA.textContent = full.slice(0, Math.min(k, split)); tyB.textContent = full.slice(split, Math.max(k, split)); };
+      anime.createTimeline({ loop: true, loopDelay: 120, onUpdate: showTy })
+        .add(ty, { n: [0, full.length], duration: 1100, ease: 'linear', modifier: anime.utils.round(0) }, 200)
+        .add(ty, { n: 0, duration: 550, ease: 'linear', modifier: anime.utils.round(0) }, '+=4200');
+    } catch (e) {}
+  })();
+</script>"""
+
+
+def hub_page(model):
+    """Body of public/index.html, the hub home: the hero (title typing over the map lines, the tagline, a search that
+    opens /learn, start-here courses, live numbers, the roadmap link and the preview note), then the four pillars from
+    tools/hub.json. A pillar that is not live links to its roadmap phase."""
+    hub = json.loads(HUB_DATA.read_text(encoding="utf-8"))
+    courses = {n["id"][7:]: n for n in model["nodes"] if n["type"] == "course"}
+    phase_of = {}
+    for i, p in enumerate(hub["phases"], 1):
+        for k in p["pillars"]:
+            phase_of.setdefault(k, i)
+    cards = []
+    for p in hub["pillars"]:
+        if p["status"] == "live":
+            tag, link = '<span class="hp-tag live">live</span>', f'<a class="hp-go" href="{p["href"]}">{p["cta"]} →</a>'
+        else:
+            tag, link = '<span class="hp-tag soon">coming</span>', f'<a class="hp-go" href="roadmap.html#phase-{phase_of[p["key"]]}">On the roadmap →</a>'
+        cards.append(f'<div class="hp-card">{tag}<h3>{p["name"]}</h3><p>{p["blurb"]}</p>{link}</div>')
+    chips = "".join(f'<a class="chip" href="learn.html#course:{slug}">{courses[slug]["label"]}</a>' for slug in hub["start"])
+    return HUB_HERO.replace("__CHIPS__", chips) + f"""
+<h2 id="pillars">What's here</h2>
+<div class="hp-pillars">{"".join(cards)}</div>
+"""
+
+
+
+def hubnav_html(current=""):
+    """The hub's top-bar navigation, the same on every page: each pillar from tools/hub.json (a live one is a link,
+    any other a quiet "soon" label hidden on phones), then Roadmap. `current` is the pillar key or "roadmap"."""
+    hub = json.loads(HUB_DATA.read_text(encoding="utf-8"))
+    items = []
+    for p in hub["pillars"]:
+        if p["status"] == "live":
+            cur = ' aria-current="page"' if p["key"] == current else ""
+            items.append(f'<a href="{p["href"]}"{cur}>{p["name"]}</a>')
+        else:
+            items.append(f'<span class="soon" title="coming soon">{p["name"]}</span>')
+    cur = ' aria-current="page"' if current == "roadmap" else ""
+    items.append(f'<a href="roadmap.html"{cur}>Roadmap</a>')
+    return '<nav class="hubnav" aria-label="The IE Hub">' + "".join(items) + "</nav>"
+
+
+def inject_hubnav(html):
+    """Replace __HUBNAV__ and __HUBNAV:key__ with the hub navigation, marking that key as the current page."""
+    return re.sub(r"__HUBNAV(?::([a-z]+))?__", lambda m: hubnav_html(m.group(1) or ""), html)
+
+
+def inject_footer(html):
+    """Replace every __FOOTER__ with the shared footer (before icons are injected, so its __ICON__ placeholders resolve)."""
+    return html.replace("__FOOTER__", footer_html()) if "__FOOTER__" in html else html
 
 
 def inject_icons(html):
@@ -482,7 +647,7 @@ def write(path, text):
 def fill(template_path, **slots):
     # Icons go into the template before the slots: course data must never be scanned for __ICON__
     # placeholders, or a label containing one would break the JSON it sits in.
-    tpl = inject_logo(inject_icons(template_path.read_text(encoding="utf-8")))
+    tpl = inject_logo(inject_icons(inject_hubnav(inject_footer(template_path.read_text(encoding="utf-8")))))
     for key, value in slots.items():
         marker = f"__{key}__"
         n = tpl.count(marker)
@@ -540,6 +705,16 @@ def sources_page(model):
     return "\n".join(parts)
 
 
+def fill_counts(text, model):
+    """Fill __COURSES__, __MODULES__, __VERIFIED__, __COVERED__, __TOTAL__ and __OPEN__ from the course model."""
+    modules = sum(1 for n in model["nodes"] if n["type"] == "module")
+    covered = model["built"] + model["covered"]
+    for k, v in {"COURSES": model["built"], "MODULES": modules, "VERIFIED": model["verified"], "COVERED": covered,
+                 "TOTAL": model["total"], "OPEN": model["total"] - covered}.items():
+        text = text.replace(f"__{k}__", str(v))
+    return text
+
+
 def write_html(cats):
     lint_templates()
     model = build_model(cats)
@@ -551,10 +726,24 @@ def write_html(cats):
     write(READER_OUT, fill(READER_TEMPLATE, DATA=enc(slim)))
     for key, title in LEGAL_PAGES.items():
         # hand-written bodies may use icons; the sources page is built from course tables, so it is not scanned
-        body = sources_page(model) if key == "sources" else inject_icons((ROOT / "tools" / "legal" / f"{key}.html").read_text(encoding="utf-8"))
-        for k, v in {"COURSES": model["built"], "VERIFIED": model["verified"], "COVERED": model["built"] + model["covered"], "TOTAL": model["total"]}.items():
-            body = body.replace(f"__{k}__", str(v))
-        write(PUBLIC / f"{key}.html", fill(LEGAL_TEMPLATE, TITLE=title, KEY=key, BODY=body))
+        if key == "sources":
+            body = sources_page(model)
+        else:
+            body = (ROOT / "tools" / "legal" / f"{key}.html").read_text(encoding="utf-8")
+            if key == "roadmap":
+                for k, v in roadmap_parts().items():
+                    body = body.replace(f"__{k}__", v)
+            body = inject_icons(body)
+        body = fill_counts(body, model)
+        write(PUBLIC / f"{key}.html", fill(LEGAL_TEMPLATE, TITLE=f"{title} · The IE Hub", DESC=f"{title} for The IE Hub, free and open industrial engineering courses.",
+                                           PATH=f"{key}.html", NAV=hubnav_html("roadmap" if key == "roadmap" else ""), MAIN_ATTR="", HEAD_SCRIPT="", BODY=body))
+    # The hub home. Old catalog links (/#course:…, /#tab=…, /index.html#…) carry a fragment the server never sees,
+    # so a script in the head forwards any fragment that is not one of this page's own anchors to learn.html.
+    forward = ("<script>(function () { const h = location.hash.slice(1); "
+               "if (h && !['main', 'pillars', 'hero'].includes(h)) location.replace('learn.html' + location.hash); })();</script>")
+    write(HUB_OUT, fill(LEGAL_TEMPLATE, TITLE="The IE Hub · industrial engineering, learned and built in the open",
+                        DESC="Free, open industrial engineering: original courses with data you can rerun, a learning path, a mind map of the field, and worked projects and insights on the way.",
+                        PATH="", NAV=hubnav_html(), MAIN_ATTR=' class="wide"', HEAD_SCRIPT=forward, BODY=fill_counts(inject_icons(hub_page(model)), model)))
     return model
 
 
@@ -564,7 +753,7 @@ if __name__ == "__main__":
     write(OUT, render(cats))
     print(f"wrote {OUT.relative_to(ROOT)}: {sum(len(c['items']) for c in cats)} courses in {len(cats)} categories")
     model = write_html(cats)
-    print(f"wrote {READER_OUT.relative_to(ROOT)}")
+    print(f"wrote {READER_OUT.relative_to(ROOT)} and {HUB_OUT.relative_to(ROOT)}")
     kinds, edges = {}, {}
     for n in model["nodes"]:
         kinds[n["type"]] = kinds.get(n["type"], 0) + 1

@@ -19,7 +19,7 @@ See [ROADMAP.md](ROADMAP.md) for a checklist of what is built and what is still 
 
 [![Roadmap graph](public/roadmap.svg)](public/roadmap.svg)
 
-**Interactive site:** <https://theiehub.com/> has:
+**Interactive site:** <https://theiehub.com/> is the hub's home page: search, where to start, the live numbers and what is here. The courses are on <https://theiehub.com/learn>:
 
 - **Catalog:** every course by category, with search.
 - **Learning path:**
@@ -28,6 +28,7 @@ See [ROADMAP.md](ROADMAP.md) for a checklist of what is built and what is still 
 - **Mind map:** courses, modules and prerequisites.
 - **Reader:** an on-site reader for every course and module.
 - **Sources page:** what each course cites.
+- **Site roadmap:** where the hub is going, phase by phase, at <https://theiehub.com/roadmap>.
 
 Progress ticks are kept in your browser only; there are no accounts and no tracking. Light and dark themes follow your system setting.
 
